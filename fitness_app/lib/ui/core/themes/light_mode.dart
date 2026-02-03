@@ -14,6 +14,12 @@ final ThemeData lightMode = ThemeData(
 
   scaffoldBackgroundColor: Colors.white,
 
+  // AppBar
+  appBarTheme: const AppBarTheme(
+    elevation: 0,
+    centerTitle: true,
+  ),
+
   // Input and text fields
   inputDecorationTheme: InputDecorationTheme(
     filled: true,
