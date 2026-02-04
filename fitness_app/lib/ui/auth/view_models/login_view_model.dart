@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../domain/auth/auth_provider.dart';
 
 class LoginViewModel extends ChangeNotifier {
@@ -10,17 +11,25 @@ class LoginViewModel extends ChangeNotifier {
   bool _obscurePassword = true;
   bool get obscurePassword => _obscurePassword;
 
+  bool _rememberMe = false; 
+  bool get rememberMe => _rememberMe;
+
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
   // Text controllers
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final nameController = TextEditingController();
 
   // Pw visibility
   void togglePasswordVisibility() {
     _obscurePassword = !_obscurePassword;
+    notifyListeners();
+  }
+
+  // Toggle remember
+  void toggleRememberMe(bool value) {
+    _rememberMe = value;
     notifyListeners();
   }
 
@@ -35,6 +44,10 @@ class LoginViewModel extends ChangeNotifier {
         emailController.text.trim(),
         passwordController.text.trim(),
       );
+
+      // Local save remember state
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('remember_me', _rememberMe);
       
       _setLoading(false);
       return true; // Success
@@ -50,37 +63,7 @@ class LoginViewModel extends ChangeNotifier {
     }
   }
 
-  // ======================= REGISTER =======================
-
-  Future<bool> register(AuthProvider authProvider) async {
-    _setLoading(true);
-    _errorMessage = null;
-
-    try {
-      // Basic validation
-      if (nameController.text.trim().isEmpty) {
-        throw FirebaseAuthException(code: 'invalid-name', message: 'Name is required');
-      }
-
-      await authProvider.signUp(
-        emailController.text.trim(),
-        passwordController.text.trim(),
-        nameController.text.trim(),
-      );
-      
-      _setLoading(false);
-      return true; // Success
-
-    } on FirebaseAuthException catch (e) {
-      _errorMessage = _mapFirebaseError(e.code);
-      _setLoading(false);
-      return false; // failed
-    } catch (e) {
-      _errorMessage = "Ocorreu um erro inesperado.";
-      _setLoading(false);
-      return false;
-    }
-  }
+  // ======================= HELPERS =======================
 
   void _setLoading(bool value) {
     _isLoading = value;
@@ -92,26 +75,18 @@ class LoginViewModel extends ChangeNotifier {
     switch (code) {
       // Login errors
       case 'user-not-found':
-        return 'Utilizador não encontrado.';
       case 'wrong-password':
-        return 'Password incorreta.';
+      case 'invalid-credential':
+        return 'Email ou palavra-passe incorretos.';
       case 'user-disabled':
         return 'Este utilizador foi desativado.';
       case 'too-many-requests':
-        return 'Muitas tentativas. Tente mais tarde.';
-      
-      // Register errors (Added these)
-      case 'email-already-in-use':
-        return 'Este email já está registado.';
+        return 'Demasiadas tentativas. Tenta mais tarde.';
       case 'invalid-email':
         return 'O email não é válido.';
-      case 'weak-password':
-        return 'A password é muito fraca.';
-      case 'invalid-name':
-        return 'Por favor, insira um nome válido.';
         
       default:
-        return 'Erro de autenticação: $code';
+        return 'Erro ao iniciar sessão. Tenta novamente: $code';
     }
   }
   
@@ -120,7 +95,6 @@ class LoginViewModel extends ChangeNotifier {
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
-    nameController.dispose(); // Added this to prevent memory leaks
     super.dispose();
   }
 }
