@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 class TenantConfig {
   final String name;
-  //final String logoAsset;
+  final String logoAsset;
   final Color mainColor;
   final String fontFamily;
 
   const TenantConfig({
     required this.name,
-    //required this.logoAsset,
+    required this.logoAsset,
     required this.mainColor,
     this.fontFamily = "Roboto",
   });
@@ -17,7 +17,7 @@ class TenantConfig {
 // Tenant configuration
 const TenantConfig tenant = TenantConfig(
   name: "Studio Manager",
-  //logoAsset: "assets/logo.png",
+  logoAsset: "assets/images/logo.png",
   mainColor: Color(0xFF1152D4), // Change this once, updates everything
   fontFamily: "Roboto",
 );
