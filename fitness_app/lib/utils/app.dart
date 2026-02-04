@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+// Routes
+import '../routes/app_routes.dart';
 //Themes
 import '../ui/core/themes/tenant.dart';
 import '../ui/core/themes/light_mode.dart';
@@ -36,6 +38,9 @@ class MyApp extends StatelessWidget {
             theme: lightMode,
             darkTheme: darkMode,
             themeMode: themeProvider.themeMode,
+
+            // Routes configuration
+            routes: AppRoutes.routes,
 
             // Start app
             home: const StartupPage(),

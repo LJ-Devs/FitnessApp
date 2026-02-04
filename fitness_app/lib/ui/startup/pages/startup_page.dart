@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../view_models/startup_view_model.dart';
-import '../../home/pages/home_page.dart';
-import '../../auth/pages/login_page.dart';
+import '../../../routes/app_routes.dart';
 import '../../../domain/auth/auth_provider.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -17,7 +16,7 @@ class _StartupPageState extends State<StartupPage> {
   @override
   void initState() {
     super.initState();
-    // init befor build
+    // init before build
     SchedulerBinding.instance.addPostFrameCallback((_) {
       final authProvider = context.read<AuthProvider>();
       context.read<StartupViewModel>().init(authProvider);
@@ -32,9 +31,9 @@ class _StartupPageState extends State<StartupPage> {
       case AuthStatus.loading:
         return const Scaffold(body: Center(child: CircularProgressIndicator()));
       case AuthStatus.loggedIn:
-        return const HomePage();
+        return AppRoutes.routes[AppRoutes.home]!(context);
       case AuthStatus.loggedOut:
-        return const LoginPage();
+        return AppRoutes.routes[AppRoutes.login]!(context);
       case AuthStatus.error:
         return Scaffold(
           body: Center(

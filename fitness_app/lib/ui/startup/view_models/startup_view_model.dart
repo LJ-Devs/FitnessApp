@@ -14,12 +14,11 @@ class StartupViewModel extends ChangeNotifier {
 
   Future<void> init(AuthProvider authProvider) async {
     try {
-      FlutterNativeSplash.remove();
-      // Simulate a small delay
-      await Future.delayed(const Duration(seconds: 1));
-
       // Verify current user
       final currentUser = FirebaseAuth.instance.currentUser;
+
+      // Simulate a small delay for smooth transition
+      await Future.delayed(const Duration(seconds: 1));
 
       if (currentUser != null) {
         // Update provider with current user
@@ -33,6 +32,8 @@ class StartupViewModel extends ChangeNotifier {
       debugPrint("Startup initialization error: $e");
       _status = AuthStatus.error;
     } finally {
+      // Remove splash only when state is ready
+      FlutterNativeSplash.remove();
       notifyListeners();
     }
   }
