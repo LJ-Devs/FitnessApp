@@ -33,7 +33,7 @@ class _LoginFormState extends State<_LoginForm> {
     final viewModel = context.watch<LoginViewModel>();
     final theme = Theme.of(context);
 
-    final String? logoAsset = tenant.logoAsset;
+    final String logoAsset = tenant.logoAsset;
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
