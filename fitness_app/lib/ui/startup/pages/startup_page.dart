@@ -3,9 +3,26 @@ import 'package:provider/provider.dart';
 import '../view_models/startup_view_model.dart';
 import '../../home/pages/home_page.dart';
 import '../../auth/pages/login_page.dart';
+import '../../../domain/auth/auth_provider.dart';
+import 'package:flutter/scheduler.dart';
 
-class StartupPage extends StatelessWidget {
+class StartupPage extends StatefulWidget {
   const StartupPage({super.key});
+  @override
+  State<StartupPage> createState() => _StartupPageState();
+}
+
+class _StartupPageState extends State<StartupPage> {
+  
+  @override
+  void initState() {
+    super.initState();
+    // init befor build
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      final authProvider = context.read<AuthProvider>();
+      context.read<StartupViewModel>().init(authProvider);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,10 +31,30 @@ class StartupPage extends StatelessWidget {
     switch (status) {
       case AuthStatus.loading:
         return const Scaffold(body: Center(child: CircularProgressIndicator()));
-            case AuthStatus.loggedIn:
+      case AuthStatus.loggedIn:
         return const HomePage();
-            case AuthStatus.loggedOut:
+      case AuthStatus.loggedOut:
         return const LoginPage();
+      case AuthStatus.error:
+        return Scaffold(
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("Ocorreu um erro ao iniciar."),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                     // Try again
+                     final authProvider = context.read<AuthProvider>();
+                     context.read<StartupViewModel>().init(authProvider);
+                  },
+                  child: const Text("Tentar Novamente"),
+                )
+              ],
+            ),
+          ),
+        );
     }
   }
 }

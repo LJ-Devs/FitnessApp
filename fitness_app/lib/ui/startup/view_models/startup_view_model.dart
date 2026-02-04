@@ -1,29 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
+import '../../../domain/auth/auth_provider.dart';
 
-enum AuthStatus { loading, loggedIn, loggedOut }
+enum AuthStatus { loading, loggedIn, loggedOut, error }
 
 class StartupViewModel extends ChangeNotifier {
   AuthStatus _status = AuthStatus.loading;
 
   AuthStatus get status => _status;
 
-  StartupViewModel() {
-    _checkStartup();
-  }
+  StartupViewModel();
 
-  Future<void> _checkStartup() async {
+  Future<void> init(AuthProvider authProvider) async {
+    try {
+      FlutterNativeSplash.remove();
+      // Simulate a small delay
+      await Future.delayed(const Duration(seconds: 1));
 
-    // Call UseCase from Auth
-    await Future.delayed(const Duration(seconds: 2));
+      // Verify current user
+      final currentUser = FirebaseAuth.instance.currentUser;
 
-    bool hasToken = true; 
-    _status = hasToken ? AuthStatus.loggedIn : AuthStatus.loggedOut;
-    
-    // Notify UI to swap screen
-    notifyListeners();
+      if (currentUser != null) {
+        // Update provider with current user
+        authProvider.setUser(currentUser); 
+        _status = AuthStatus.loggedIn;
+      } else {
+        _status = AuthStatus.loggedOut;
+      }
 
-    // Remove Native Splash
-    FlutterNativeSplash.remove();
+    } catch (e) {
+      debugPrint("Startup initialization error: $e");
+      _status = AuthStatus.error;
+    } finally {
+      notifyListeners();
+    }
   }
 }
