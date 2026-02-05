@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import '../../../domain/auth/auth_provider.dart';
+import '../../../utils/validators.dart';
 
 class RegisterViewModel extends ChangeNotifier {
   // Form state
@@ -44,8 +45,24 @@ class RegisterViewModel extends ChangeNotifier {
 
     try {
       // Basic validation
-      if (name.isEmpty || email.isEmpty || password.isEmpty) {
-        throw FirebaseAuthException(code: 'empty-fields');
+      if (name.isEmpty) {
+        _errorMessage = "O nome é obrigatório.";
+        _setLoading(false);
+        return false;
+      }
+
+      final emailError = Validators.validateEmail(email);
+      if (emailError != null) {
+        _errorMessage = emailError; // Error message from validator
+        _setLoading(false);
+        return false;
+      }
+
+      final passwordError = Validators.validatePassword(password);
+      if (passwordError != null) {
+        _errorMessage = passwordError; // Error message from validator
+        _setLoading(false);
+        return false;
       }
 
       await authProvider.signUp(

@@ -45,18 +45,11 @@ class _RegisterFormState extends State<_RegisterForm> {
                   // ==============================
                   // LOGO / BRANDING
                   // ==============================
-                  if (logoAsset != null)
-                    Image.asset(
-                      logoAsset,
-                      height: 100,
-                      fit: BoxFit.contain,
-                    )
-                  else
-                    Icon(
-                      Icons.person_add_alt_1_rounded,
-                      size: 80,
-                      color: theme.colorScheme.primary,
-                    ),
+                  Image.asset(
+                    logoAsset,
+                    height: 100,
+                    fit: BoxFit.contain,
+                  ),
           
                   const SizedBox(height: 60),
           
