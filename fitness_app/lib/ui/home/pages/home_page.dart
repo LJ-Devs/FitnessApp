@@ -1,8 +1,10 @@
+import 'package:fitness_app/ui/profile/pages/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../view_models/home_view_model.dart';
 import '../widgets/home_nav_bar.dart';
 import '../../dashboard/pages/dashboard_page.dart';
+import 'package:fitness_app/ui/chat/pages/chat_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -25,10 +27,8 @@ class _HomeView extends StatelessWidget {
 
     final List<Widget> pages = [
       const DashboardPage(), 
-      
-      const Scaffold(body: Center(child: Text("Chat - Em Desenvolvimento"))), //Placeholder para substituir depois
-      
-      const Scaffold(body: Center(child: Text("Perfil - Em Construção"))), //Placeholder para substituir depois
+      const ChatPage(),
+      const ProfilePage(),
     ];
 
     return Scaffold(
