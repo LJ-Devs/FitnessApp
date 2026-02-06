@@ -1,14 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../entities/app_user.dart';
-import '../../data/services/firestore_service.dart';
+import '../../data/repositories/user_repository.dart';
 import '../../data/services/storage_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirestoreService _firestoreService = FirestoreService();
+  final UserRepository _userRepository = UserRepository();
   final StorageService _storageService = StorageService();
 
   User? _user;
@@ -57,7 +56,7 @@ class AuthProvider extends ChangeNotifier {
           createdAt: DateTime.now(),
         );
 
-        await _firestoreService.saveUser(newUser);
+        await _userRepository.saveUser(newUser);
         
         // Success
         notifyListeners();
@@ -89,14 +88,15 @@ class AuthProvider extends ChangeNotifier {
       // Update Auth Profile
       await user.updateDisplayName(name);
 
-      // Update Firestore Data
-      await _firestoreService.updateUserData(
-        user.uid, 
-        {
-          'name': name,
-          'updated_at': FieldValue.serverTimestamp(),
-        },
+      // Update Firestore Data via Repository
+      final updatedUser = AppUser(
+        uid: user.uid,
+        email: user.email!,
+        name: name,
+        photoUrl: user.photoURL, // Same photoUrl
       );
+
+      await _userRepository.saveUser(updatedUser);
       
       notifyListeners();
     } catch (e) {
@@ -116,14 +116,15 @@ class AuthProvider extends ChangeNotifier {
       // Update Auth Profile Avatar
       await user.updatePhotoURL(downloadUrl);
 
-      // Update Firestore Data
-      await _firestoreService.updateUserData(
-        user.uid,
-        {
-          'photo_url': downloadUrl,
-          'updated_at': FieldValue.serverTimestamp(),
-        },
+      // Update Firestore Data via Repository
+      final updatedUser = AppUser(
+        uid: user.uid,
+        email: user.email!,
+        name: user.displayName, // Name remains the same
+        photoUrl: downloadUrl,
       );
+
+      await _userRepository.saveUser(updatedUser);
       
       notifyListeners();
     } catch (e) {
