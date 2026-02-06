@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
+import '../../core/shared/my_app_bar.dart';
 import '../view_models/edit_profile_view_model.dart';
 import '../../../domain/auth/auth_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -30,9 +31,9 @@ class _EditProfileForm extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(), // Close keyboard
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text("Dados Pessoais"),
-          centerTitle: true,
+        appBar: const MyAppBar(
+          title: Text("Dados pessoais"), 
+          showBackButton: true,
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
