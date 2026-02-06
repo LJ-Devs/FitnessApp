@@ -114,21 +114,10 @@ class _LoginFormState extends State<_LoginForm> {
                     ),
                     obscureText: viewModel.obscurePassword,
                   ),
-          
-                  const SizedBox(height: 16),
-          
-                  // "Remember Me" & "Forgot Password"
+
+                  // Password Recovery Link
                   Row(
                     children: [
-                      const Text("Lembrar-me"),
-                      Transform.scale(
-                        scale: 0.7,
-                        child: Switch(
-                          value: viewModel.rememberMe,
-                          onChanged: (value) => viewModel.toggleRememberMe(value)
-                        ),
-                      ),
-                      const Spacer(),
                       TextButton(
                         onPressed: () {
                           // TODO: Implement Forgot Password navigation
@@ -157,21 +146,20 @@ class _LoginFormState extends State<_LoginForm> {
                       onPressed: viewModel.isLoading
                       ? null
                       : () async {
-                          // 1. Fechar o teclado
+                          // Close the keyboard
                           FocusScope.of(context).unfocus();
                           
-                          // 2. Chamar a lógica de Login
+                          // Called when user taps "Login"
                           final authProvider = context.read<AuthProvider>();
                           final success = await viewModel.login(authProvider);
                           
-                          // 3. VERIFICAR O RESULTADO
+                          // Verify status
                           if (context.mounted) {
                             if (success) {
-                              // === ESTA É A PARTE QUE FALTA ===
-                              // Se o login foi um sucesso, navega para a Home
+                              // If login successful navigate to home and remove login from stack
                               Navigator.pushReplacementNamed(context, AppRoutes.home);
                             } else if (viewModel.errorMessage != null) {
-                              // Se falhou, mostra o erro
+                              // If failed show error message
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(viewModel.errorMessage!),

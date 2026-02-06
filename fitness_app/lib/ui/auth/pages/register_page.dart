@@ -119,24 +119,6 @@ class _RegisterFormState extends State<_RegisterForm> {
                     textInputAction: TextInputAction.done,
                   ),
 
-                  const SizedBox(height: 16),
-
-                  // "Remember Me"
-                  Row(
-                    children: [
-                      const Text("Lembrar-me"),
-                      Transform.scale(
-                        scale: 0.7,
-                        child: Switch(
-                          value: viewModel.rememberMe,
-                          onChanged: (value) => viewModel.toggleRememberMe(value),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 32),
-
                   const SizedBox(height: 32),
           
                   // ==============================
@@ -154,19 +136,18 @@ class _RegisterFormState extends State<_RegisterForm> {
                               final authProvider = context.read<AuthProvider>();
                               final success = await viewModel.register(authProvider);
                               
-                              if (success && context.mounted) {
-                                Navigator.pushNamedAndRemoveUntil(
-                                  context, 
-                                  '/home',
-                                  (route) => false,
-                                ); 
-                              } else if (context.mounted && viewModel.errorMessage != null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(viewModel.errorMessage!),
-                                    backgroundColor: theme.colorScheme.error,
-                                  ),
-                                );
+                              if (context.mounted) {
+                                if (success) {
+                                  Navigator.of(context).popUntil((route) => route.isFirst);
+                                } else if (viewModel.errorMessage != null) {
+                                  // If failed show error message
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(viewModel.errorMessage!),
+                                      backgroundColor: theme.colorScheme.error,
+                                    ),
+                                  );
+                                }
                               }
                             },
                       style: ElevatedButton.styleFrom(

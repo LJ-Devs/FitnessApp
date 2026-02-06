@@ -51,6 +51,7 @@ class AuthProvider extends ChangeNotifier {
           uid: _user!.uid,
           email: email,
           name: name,
+          createdAt: DateTime.now(),
         );
 
         await _firestoreService.saveUser(newUser);

@@ -4,15 +4,14 @@ import '../../../domain/auth/auth_provider.dart';
 import '../../../utils/validators.dart';
 
 class RegisterViewModel extends ChangeNotifier {
+  bool _isDisposed = false;
+
   // Form state
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
   bool _obscurePassword = true;
   bool get obscurePassword => _obscurePassword;
-
-  bool _rememberMe = true; 
-  bool get rememberMe => _rememberMe;
 
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
@@ -25,12 +24,7 @@ class RegisterViewModel extends ChangeNotifier {
   // Pw visibility
   void togglePasswordVisibility() {
     _obscurePassword = !_obscurePassword;
-    notifyListeners();
-  }
-
-  void toggleRememberMe(bool value) {
-    _rememberMe = value;
-    notifyListeners();
+    if (!_isDisposed) notifyListeners(); // Protection
   }
 
   // ======================= REGISTER =======================
@@ -88,6 +82,9 @@ class RegisterViewModel extends ChangeNotifier {
   // ======================= HELPERS =======================
 
   void _setLoading(bool value) {
+    // Safety check
+    if (_isDisposed) return;
+
     _isLoading = value;
     notifyListeners();
   }
@@ -112,6 +109,7 @@ class RegisterViewModel extends ChangeNotifier {
   // clean memory
   @override
   void dispose() {
+    _isDisposed = true;
     nameController.dispose();
     emailController.dispose();
     passwordController.dispose();

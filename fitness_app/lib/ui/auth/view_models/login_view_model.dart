@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../domain/auth/auth_provider.dart';
 
 class LoginViewModel extends ChangeNotifier {
+  bool _isDisposed = false;
+
   // Form state
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
   bool _obscurePassword = true;
   bool get obscurePassword => _obscurePassword;
-
-  bool _rememberMe = false; 
-  bool get rememberMe => _rememberMe;
 
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
@@ -24,15 +22,9 @@ class LoginViewModel extends ChangeNotifier {
   // Pw visibility
   void togglePasswordVisibility() {
     _obscurePassword = !_obscurePassword;
-    notifyListeners();
+    if (!_isDisposed) notifyListeners();
   }
-
-  // Toggle remember
-  void toggleRememberMe(bool value) {
-    _rememberMe = value;
-    notifyListeners();
-  }
-
+  
   // ======================= LOGIN =======================
 
   Future<bool> login(AuthProvider authProvider) async {
@@ -44,10 +36,6 @@ class LoginViewModel extends ChangeNotifier {
         emailController.text.trim(),
         passwordController.text.trim(),
       );
-
-      // Local save remember state
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('remember_me', _rememberMe);
       
       _setLoading(false);
       return true; // Success
@@ -66,6 +54,8 @@ class LoginViewModel extends ChangeNotifier {
   // ======================= HELPERS =======================
 
   void _setLoading(bool value) {
+    // Safety check: stop if view is gone
+    if (_isDisposed) return;
     _isLoading = value;
     notifyListeners();
   }
@@ -93,6 +83,7 @@ class LoginViewModel extends ChangeNotifier {
   // clean memory
   @override
   void dispose() {
+    _isDisposed = true; // Mark as disposed
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
