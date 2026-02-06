@@ -4,7 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import '../../core/shared/my_app_bar.dart';
 import '../view_models/edit_profile_view_model.dart';
 import '../../../domain/auth/auth_provider.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fitness_app/ui/core/shared/my_text_field.dart';
+import '../widgets/profile_avatar_selector.dart';
 
 class EditProfilePage extends StatelessWidget {
   const EditProfilePage({super.key});
@@ -40,66 +41,30 @@ class _EditProfileForm extends StatelessWidget {
           child: Column(
             children: [
               // Avatar
-              Center(
-                child: Stack(
-                  children: [
-                    // The avatar -> image
-                    CircleAvatar(
-                      radius: 60,
-                      backgroundColor: theme.colorScheme.primaryContainer,
-                      // If a new image is selected, show it, else show photoUrl
-                      backgroundImage: viewModel.selectedImage != null
-                          ? FileImage(viewModel.selectedImage!) as ImageProvider
-                          : (currentUser?.photoURL != null
-                              ? CachedNetworkImageProvider(currentUser!.photoURL!)
-                              : null),
-                      // else show default icon
-                      child: (viewModel.selectedImage == null && currentUser?.photoURL == null)
-                          ? Icon(Icons.person, size: 60, color: theme.colorScheme.primary)
-                          : null,
-                    ),
-                    // Camera icon
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: GestureDetector(
-                        // Call image picker on tap
-                        onTap: viewModel.isLoading ? null : viewModel.pickImage,
-                        child: CircleAvatar(
-                          radius: 20,
-                          backgroundColor: theme.colorScheme.primary,
-                          child: const Icon(
-                            Icons.camera_alt,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              ProfileAvatarSelector(
+                selectedImage: viewModel.selectedImage,
+                photoUrl: currentUser?.photoURL,
+                onTap: viewModel.pickImage,
+                isLoading: viewModel.isLoading,
               ),
+              
               const SizedBox(height: 32),
 
               // Email field disabled, but visible
-              TextField(
+              MyTextField(
                 controller: viewModel.emailController,
-                enabled: false,
-                decoration: const InputDecoration(
-                  labelText: "Email",
-                  prefixIcon: Icon(Icons.email_outlined),
-                  filled: true,
-                ),
+                label: "Email",
+                prefixIcon: Icons.email_outlined,
+                enabled: false, // Non-editable, just for display
               ),
+
               const SizedBox(height: 24),
 
               // Name field editable
-              TextField(
+              MyTextField(
                 controller: viewModel.nameController,
-                decoration: const InputDecoration(
-                  labelText: "Nome Completo",
-                  prefixIcon: Icon(Icons.person_outline),
-                ),
+                label: "Nome",
+                prefixIcon: Icons.person_outline,
                 textInputAction: TextInputAction.done,
               ),
 

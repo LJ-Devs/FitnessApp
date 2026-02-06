@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/themes/tenant.dart';
 import '../widgets/chat_tile.dart';
+import '../../core/shared/my_text_field.dart';
 
 class ChatPage extends StatelessWidget {
   const ChatPage({super.key});
@@ -16,7 +17,7 @@ class ChatPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Heade
+            // Header
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
               child: Text(
@@ -35,28 +36,10 @@ class ChatPage extends StatelessWidget {
             // Search Bar TODO
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                height: 50,
-                decoration: BoxDecoration(
-                  color: isDark 
-                      ? colors.surfaceContainerHighest.withValues(alpha: 0.5) // Dark mode
-                      : Colors.grey.withValues(alpha: 0.1), // Light mode
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.search, color: colors.onSurfaceVariant),
-                    const SizedBox(width: 12),
-                    Text(
-                      "Procurar conversa...",
-                      style: TextStyle(
-                        color: colors.onSurfaceVariant,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
+              child: MyTextField(
+                controller: TextEditingController(), // Implement search functionality here
+                label: "Procurar conversa...",
+                prefixIcon: Icons.search,
               ),
             ),
 

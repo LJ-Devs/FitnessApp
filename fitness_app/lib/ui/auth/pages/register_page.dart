@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../core/themes/tenant.dart';
 import '../view_models/register_view_model.dart';
 import '../../../domain/auth/auth_provider.dart';
+import '../../../ui/core/shared/my_text_field.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
@@ -78,45 +79,38 @@ class _RegisterFormState extends State<_RegisterForm> {
                   // INPUT FIELDS
                   // ==============================
           
-                  TextField(
+                  MyTextField(
                     controller: viewModel.nameController,
-                    decoration: const InputDecoration(
-                      labelText: "Nome",
-                      prefixIcon: Icon(Icons.person_outline),
-                    ),
-                    textInputAction: TextInputAction.next,
+                    label: "Nome",
+                    prefixIcon: Icons.person_outline,
+                    enabled: !viewModel.isLoading,
                   ),
 
                   const SizedBox(height: 16),
 
-                  TextField(
+                  MyTextField(
                     controller: viewModel.emailController,
-                    decoration: const InputDecoration(
-                      labelText: "Email",
-                      prefixIcon: Icon(Icons.email_outlined),
-                    ),
+                    label: "Email",
+                    prefixIcon: Icons.email_outlined,
                     keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.next,
+                    enabled: !viewModel.isLoading,
                   ),
           
                   const SizedBox(height: 16),
           
-                  TextField(
+                  MyTextField(
                     controller: viewModel.passwordController,
-                    decoration: InputDecoration(
-                      labelText: "Palavra-passe",
-                      prefixIcon: const Icon(Icons.lock_outline),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          viewModel.obscurePassword
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                        ),
-                        onPressed: viewModel.togglePasswordVisibility,
-                      ),
-                    ),
+                    label: "Palavra-passe",
+                    prefixIcon: Icons.lock_outline,
                     obscureText: viewModel.obscurePassword,
                     textInputAction: TextInputAction.done,
+                    enabled: !viewModel.isLoading,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        viewModel.obscurePassword ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: viewModel.togglePasswordVisibility,
+                    ),
                   ),
 
                   const SizedBox(height: 32),

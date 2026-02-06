@@ -4,6 +4,7 @@ import '../../../routes/app_routes.dart';
 import '../../core/themes/tenant.dart';
 import '../view_models/login_view_model.dart';
 import '../../../domain/auth/auth_provider.dart';
+import '../../core/shared/my_text_field.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -84,35 +85,30 @@ class _LoginFormState extends State<_LoginForm> {
                   // ==============================
           
                   // Email TextField
-                  TextField(
+                  MyTextField(
                     controller: viewModel.emailController,
-                    decoration: const InputDecoration(
-                      labelText: "Email",
-                      prefixIcon: Icon(Icons.email_outlined),
-                    ),
+                    label: "Email",
+                    prefixIcon: Icons.email_outlined,
                     keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.next,
+                    enabled: !viewModel.isLoading, // Bloqueia durante o login
                   ),
           
                   const SizedBox(height: 16),
           
                   // Password TextField
-                  TextField(
+                  MyTextField(
                     controller: viewModel.passwordController,
-                    decoration: InputDecoration(
-                      labelText: "Palavra-passe",
-                      prefixIcon: const Icon(Icons.lock_outline),
-                      // Toggle Password Visibility Icon
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          viewModel.obscurePassword
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                        ),
-                        onPressed: viewModel.togglePasswordVisibility,
-                      ),
-                    ),
+                    label: "Palavra-passe",
+                    prefixIcon: Icons.lock_outline,
                     obscureText: viewModel.obscurePassword,
+                    textInputAction: TextInputAction.done,
+                    enabled: !viewModel.isLoading,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        viewModel.obscurePassword ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: viewModel.togglePasswordVisibility,
+                    ),
                   ),
 
                   // Password Recovery Link
