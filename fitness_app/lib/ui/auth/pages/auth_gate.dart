@@ -9,26 +9,26 @@ class AuthGate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
-      // O stream ouve o Firebase (Login, Logout, Token Expirado, App Aberta)
+      // Stream listtens to auth state changes (login/logout)
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         
-        // 1. A CARREGAR (Estado Indeterminado)
+        // Loading state while checking auth status
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
         }
 
-        // Já sabemos o estado, removemos o Splash Screen nativo
+        // Remove splash screen once we have auth state
         FlutterNativeSplash.remove();
 
-        // 2. TEM USER? (Logado) -> Entra na App (Dashboard)
+        // If user is logged in, go to Home, otherwise go to Login
         if (snapshot.hasData) {
           return AppRoutes.routes[AppRoutes.home]!(context);
         } 
         
-        // 3. NÃO TEM USER? (Visitante) -> Vai para o Login
+        // If no user, show login page
         else {
           return AppRoutes.routes[AppRoutes.login]!(context);
         }
