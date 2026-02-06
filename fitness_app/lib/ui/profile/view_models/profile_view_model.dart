@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ProfileViewModel extends ChangeNotifier {
   // State
@@ -46,7 +47,7 @@ class ProfileViewModel extends ChangeNotifier {
 
           if (_avatarUrl != null) {
             try {
-              await NetworkImage(_avatarUrl!).evict();
+              await CachedNetworkImageProvider(_avatarUrl!).evict();
             } catch (e) {
               // ignore cache errors, aren't critical
             }

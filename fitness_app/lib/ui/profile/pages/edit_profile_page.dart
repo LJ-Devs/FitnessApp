@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import '../view_models/edit_profile_view_model.dart';
 import '../../../domain/auth/auth_provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class EditProfilePage extends StatelessWidget {
   const EditProfilePage({super.key});
@@ -49,7 +50,7 @@ class _EditProfileForm extends StatelessWidget {
                       backgroundImage: viewModel.selectedImage != null
                           ? FileImage(viewModel.selectedImage!) as ImageProvider
                           : (currentUser?.photoURL != null
-                              ? NetworkImage(currentUser!.photoURL!)
+                              ? CachedNetworkImageProvider(currentUser!.photoURL!)
                               : null),
                       // else show default icon
                       child: (viewModel.selectedImage == null && currentUser?.photoURL == null)

@@ -4,6 +4,7 @@ import '../../../routes/app_routes.dart';
 import '../../core/themes/tenant.dart';
 import '../widgets/profile_option.dart';
 import '../view_models/profile_view_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -64,7 +65,7 @@ class _ProfileView extends StatelessWidget {
                           backgroundColor: colors.surfaceContainerHighest,
                           // Dynamic avatar -> avatarURL or default icon
                           backgroundImage: viewModel.avatarUrl != null 
-                              ? NetworkImage(viewModel.avatarUrl!) 
+                              ? CachedNetworkImageProvider(viewModel.avatarUrl!)
                               : null,
                           child: viewModel.avatarUrl == null
                               ? Icon(Icons.person, size: 50, color: colors.onSurfaceVariant)
