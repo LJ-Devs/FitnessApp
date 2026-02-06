@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../routes/app_routes.dart';
 import '../../core/themes/tenant.dart';
 import '../widgets/profile_option.dart';
 import '../view_models/profile_view_model.dart';
@@ -101,9 +102,15 @@ class _ProfileView extends StatelessWidget {
 
               ProfileOption(
                 title: "Dados Pessoais",
-                icon: Icons.person_outline_rounded,
+                icon: Icons.person,
                 onTap: () {
-                  // Navigate to edit profile
+                  // Change to EditProfilePage and wait for result
+                  Navigator.pushNamed(context, AppRoutes.editProfile).then((_) {
+                    // After return, reload profile
+                    if (context.mounted) {
+                      context.read<ProfileViewModel>().loadUserProfile();
+                    }
+                  });
                 },
               ),
               const SizedBox(height: 12),
@@ -143,7 +150,7 @@ class _ProfileView extends StatelessWidget {
               Consumer<ProfileViewModel>(
               builder: (context, viewModel, _) {
                 return Text(
-                  "Versão ${viewModel.appVersion}", // <--- USA A VARIÁVEL AQUI
+                  "Versão ${viewModel.appVersion}",
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Colors.grey,
                       ),

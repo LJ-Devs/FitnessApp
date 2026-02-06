@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../entities/app_user.dart';
-import '../../../data/services/firestore_service.dart';
+import '../../data/services/firestore_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -75,5 +76,28 @@ class AuthProvider extends ChangeNotifier {
     await _auth.signOut();
     _user = null;
     notifyListeners();
+  }
+
+  Future<void> updateUserData({required String name}) async {
+    final user = _auth.currentUser;
+    if (user == null) throw Exception("Utilizador não autenticado");
+
+    try {
+      // Update Auth Profile
+      await user.updateDisplayName(name);
+
+      // Update Firestore Data
+      await _firestoreService.updateUserData(
+        user.uid, 
+        {
+          'name': name,
+          'updated_at': FieldValue.serverTimestamp(),
+        },
+      );
+      
+      notifyListeners();
+    } catch (e) {
+      throw Exception("Erro ao atualizar dados: $e");
+    }
   }
 }

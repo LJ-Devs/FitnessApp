@@ -14,7 +14,7 @@ class FirestoreService {
     }
   }
   
-  // Optional method to read data
+  // Read data
   Future<AppUser?> getUser(String uid) async {
     try {
       final doc = await _db.collection('users').doc(uid).get();
@@ -24,6 +24,15 @@ class FirestoreService {
       return null;
     } catch (e) {
       return null;
+    }
+  }
+
+  // Update data
+  Future<void> updateUserData(String uid, Map<String, dynamic> data) async {
+    try {
+      await _db.collection('users').doc(uid).update(data);
+    } catch (e) {
+      rethrow;
     }
   }
 }
