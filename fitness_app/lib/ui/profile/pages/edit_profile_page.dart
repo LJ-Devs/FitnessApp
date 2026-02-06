@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import '../view_models/edit_profile_view_model.dart';
 import '../../../domain/auth/auth_provider.dart';
 
@@ -22,6 +23,7 @@ class _EditProfileForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<EditProfileViewModel>();
+    final currentUser = FirebaseAuth.instance.currentUser;
     final theme = Theme.of(context);
 
     return GestureDetector(
@@ -36,10 +38,44 @@ class _EditProfileForm extends StatelessWidget {
           child: Column(
             children: [
               // Avatar
-              CircleAvatar(
-                radius: 50,
-                backgroundColor: theme.colorScheme.primaryContainer,
-                child: Icon(Icons.person, size: 50, color: theme.colorScheme.primary),
+              Center(
+                child: Stack(
+                  children: [
+                    // The avatar -> image
+                    CircleAvatar(
+                      radius: 60,
+                      backgroundColor: theme.colorScheme.primaryContainer,
+                      // If a new image is selected, show it, else show photoUrl
+                      backgroundImage: viewModel.selectedImage != null
+                          ? FileImage(viewModel.selectedImage!) as ImageProvider
+                          : (currentUser?.photoURL != null
+                              ? NetworkImage(currentUser!.photoURL!)
+                              : null),
+                      // else show default icon
+                      child: (viewModel.selectedImage == null && currentUser?.photoURL == null)
+                          ? Icon(Icons.person, size: 60, color: theme.colorScheme.primary)
+                          : null,
+                    ),
+                    // Camera icon
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: GestureDetector(
+                        // Call image picker on tap
+                        onTap: viewModel.isLoading ? null : viewModel.pickImage,
+                        child: CircleAvatar(
+                          radius: 20,
+                          backgroundColor: theme.colorScheme.primary,
+                          child: const Icon(
+                            Icons.camera_alt,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 32),
 

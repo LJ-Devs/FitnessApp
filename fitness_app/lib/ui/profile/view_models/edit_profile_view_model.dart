@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import '../../../domain/auth/auth_provider.dart';
+import 'package:image_picker/image_picker.dart';
 
 class EditProfileViewModel extends ChangeNotifier {
   bool _isDisposed = false;
@@ -8,8 +10,13 @@ class EditProfileViewModel extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  bool _isPickingImage = false;
+
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
+
+  File? _selectedImage;
+  File? get selectedImage => _selectedImage;
 
   // Input Controllers
   final nameController = TextEditingController();
@@ -28,6 +35,25 @@ class EditProfileViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> pickImage() async {
+    if (_isPickingImage) return;
+    _isPickingImage = true;
+
+    try {
+      final ImagePicker picker = ImagePicker();
+      // Pick image from gallery
+      final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    
+      if (image != null) {
+        _selectedImage = File(image.path); // Store selected image as File
+        notifyListeners(); // Notify UI to update
+      }
+    } 
+    finally {
+      _isPickingImage = false;
+    }
+  }
+
   Future<bool> saveChanges(AuthProvider authProvider) async {
     _setLoading(true);
     _errorMessage = null;
@@ -42,6 +68,10 @@ class EditProfileViewModel extends ChangeNotifier {
     }
 
     try {
+      // If a new image was selected, upload it
+      if (_selectedImage != null) {
+        await authProvider.updateProfileImage(_selectedImage!);
+      }
       // Update display name in Firebase Auth
       await authProvider.updateUserData(name: newName);
       

@@ -35,24 +35,35 @@ class ProfileViewModel extends ChangeNotifier {
       final user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
-        // Vai buscar os dados reais ao Firestore
+        // Load user data from Firestore
         final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
 
         if (doc.exists) {
           final data = doc.data() as Map<String, dynamic>;
 
           _userName = data['name'] ?? "Utilizador";
-          _avatarUrl = data['photoUrl'];
+          _avatarUrl = data['photo_url'];
 
-          // Lógica para ler a data e converter para texto
+          if (_avatarUrl != null) {
+            try {
+              await NetworkImage(_avatarUrl!).evict();
+            } catch (e) {
+              // ignore cache errors, aren't critical
+            }
+          }
+
+          // Read and format join date
           if (data['createdAt'] != null) {
             DateTime date;
             final dynamic createdAt = data['createdAt'];
             
             if (createdAt is Timestamp) {
               date = createdAt.toDate();
-            } else if (createdAt is String) date = DateTime.tryParse(createdAt) ?? DateTime.now();
-            else date = DateTime.now();
+            } else if (createdAt is String) {
+               date = DateTime.tryParse(createdAt) ?? DateTime.now();
+            } else {
+              date = DateTime.now();
+            }
 
             _joinDate = "Membro desde ${_formatDate(date)}";
           } else {
