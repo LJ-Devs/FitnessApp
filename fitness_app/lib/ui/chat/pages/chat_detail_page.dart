@@ -17,7 +17,7 @@ class ChatDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // USANDO A COMPONENTE REUTILIZÁVEL
+      // Reutilize MyAppBar to consistently style
       appBar: MyAppBar(
         title: Row(
           children: [
@@ -40,7 +40,7 @@ class ChatDetailPage extends StatelessWidget {
               ],
             ),
           ),
-          _buildInputBar(context), // Poderias extrair este também!
+          _buildInputBar(context), // TODO Extract input bar for cleaner code (Think about make it separated widget and use it in LoginPage/RegisterPage too)
         ],
       ),
     );
