@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -9,11 +10,14 @@ import '../../domain/usecases/get_profile_usecase.dart';
 class ProfileViewModel extends ChangeNotifier {
   final LogoutUseCase logoutUseCase;
   final GetProfileUseCase getProfileUseCase;
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   ProfileViewModel({
     required this.logoutUseCase,
     required this.getProfileUseCase,
-  }); 
+  }) {
+    _listenToAuthChanges();
+  }
 
   // State
   bool _isLoading = false;
@@ -23,6 +27,7 @@ class ProfileViewModel extends ChangeNotifier {
   String _appVersion = "";
   
   // Safety flag
+  StreamSubscription? _authSubscription;
   bool _isDisposed = false;
 
   // Getters
@@ -32,8 +37,18 @@ class ProfileViewModel extends ChangeNotifier {
   String? get avatarUrl => _avatarUrl;
   String get appVersion => _appVersion;
 
+  void _listenToAuthChanges() {
+    _authSubscription = _firebaseAuth.userChanges().listen((user) {
+      if (user != null) {
+        loadUserProfile();
+      }
+    });
+  }
+
   // Load user profile data
   Future<void> loadUserProfile() async {
+    if (_isDisposed) return;
+
     _isLoading = true;
     notifyListeners();
 
@@ -45,6 +60,7 @@ class ProfileViewModel extends ChangeNotifier {
 
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
+      await Future.delayed(const Duration(milliseconds: 500));
       // Load user data from Firestore
       final result = await getProfileUseCase(user.uid);
 
@@ -58,7 +74,7 @@ class ProfileViewModel extends ChangeNotifier {
            _userName = userEntity.name ?? "Utilizador";
            _avatarUrl = userEntity.photoUrl;
            
-           // Evict cache logic
+           // Avoid cache logic
            if (_avatarUrl != null && !_isDisposed) {
              try {
                 CachedNetworkImageProvider(_avatarUrl!).evict(); 
@@ -93,6 +109,7 @@ class ProfileViewModel extends ChangeNotifier {
   @override
   void dispose() {
     _isDisposed = true;
+    _authSubscription?.cancel();
     super.dispose();
   }
 }

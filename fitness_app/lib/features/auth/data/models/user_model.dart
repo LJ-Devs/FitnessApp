@@ -28,7 +28,7 @@ class UserModel extends UserEntity {
       uid: json['uid'] ?? '',
       email: json['email'] ?? '',
       name: json['name'],
-      photoUrl: json['photoUrl'] ?? json['photo_url'],
+      photoUrl: json['photo_url'] ?? json['photoUrl'],
       createdAt: _parseDate(json['createdAt']),
     );
   }
@@ -39,7 +39,7 @@ class UserModel extends UserEntity {
       'uid': uid,
       'email': email,
       'name': name,
-      'photo_Url': photoUrl,
+      'photo_url': photoUrl,
       'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : null,
     };
   }

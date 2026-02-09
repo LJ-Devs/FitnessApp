@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../../injection_container.dart';
 import '../view_models/dashboard_view_model.dart';
 import '../../../../core/widgets/my_action_card.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/theme/tenant.dart'; 
 
 class DashboardPage extends StatelessWidget {
@@ -54,7 +55,7 @@ class _DashboardView extends StatelessWidget {
               
               const SizedBox(height: 32),
               
-              // Fast actions
+              // Quick actions
               Text(
                 "Acesso Rápido",
                 style: TextStyle(
@@ -109,7 +110,7 @@ class _DashboardView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Olá, ${viewModel.userName} 👋", 
+              "Olá, ${viewModel.greetingName} 👋", 
               style: TextStyle(
                 fontSize: 26,
                 fontWeight: FontWeight.bold,
@@ -140,7 +141,19 @@ class _DashboardView extends StatelessWidget {
                 width: 2
             ),
           ),
-          child: Icon(Icons.person, color: colors.onSurfaceVariant), // TODO - Avatar from database
+          child: ClipOval(
+            child: viewModel.avatarUrl != null
+            ? CachedNetworkImage(
+                imageUrl: viewModel.avatarUrl!,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: CircularProgressIndicator(strokeWidth: 2, color: colors.primary),
+                ),
+                errorWidget: (context, url, error) => Icon(Icons.person, color: colors.onSurfaceVariant),
+              )
+            : Icon(Icons.person, color: colors.onSurfaceVariant),
+          ),
         ),
       ],
     );

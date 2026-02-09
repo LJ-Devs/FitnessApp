@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/user_model.dart';
 
@@ -11,8 +12,12 @@ abstract class AuthRemoteDataSource {
 // Implementation
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final FirebaseAuth firebaseAuth;
+  final FirebaseFirestore firestore;
 
-  AuthRemoteDataSourceImpl({required this.firebaseAuth});
+  AuthRemoteDataSourceImpl({
+    required this.firebaseAuth,
+    required this.firestore,
+  });
 
   @override
   Future<UserModel> login(String email, String password) async {
@@ -32,17 +37,28 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       password: password,
     );
 
-    // Update the display name in Firebase
-    if (userCredential.user != null) {
-      await userCredential.user!.updateDisplayName(name);
-    }
+    final user = userCredential.user!;
+    // Update Auth Display Name
+    await user.updateDisplayName(name);
 
-    // Return the model with the new name
-    return UserModel(
-      uid: userCredential.user!.uid,
+    final newUser = UserModel(
+      uid: user.uid,
       email: email,
       name: name,
+      photoUrl: null,
+      createdAt: DateTime.now(),
     );
+    
+    await firestore.collection('users').doc(user.uid).set({
+      'uid': user.uid,
+      'email': email,
+      'name': name,
+      'photo_url': null,
+      'createdAt': FieldValue.serverTimestamp(),
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+
+    return newUser;
   }
 
   @override

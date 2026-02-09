@@ -60,7 +60,10 @@ Future<void> init() async {
 
   // Data Layer (Data Sources)
   sl.registerLazySingleton<AuthRemoteDataSource>(
-    () => AuthRemoteDataSourceImpl(firebaseAuth: sl()),
+    () => AuthRemoteDataSourceImpl(
+      firebaseAuth: sl(),
+      firestore: sl(),
+    ),
   );
 
   // ------------ Features - Profile ------------
@@ -94,7 +97,9 @@ Future<void> init() async {
 
   // ------------ Features - Home/Dashboard ------------
   sl.registerFactory(() => HomeViewModel());
-  sl.registerFactory(() => DashboardViewModel());
+  sl.registerFactory(() => DashboardViewModel(
+    getProfileUseCase: sl(),
+  ));
 
   // ------------ Features - Chat ------------
 
