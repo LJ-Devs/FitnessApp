@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../domain/entities/user_entity.dart';
 
@@ -24,13 +25,11 @@ class UserModel extends UserEntity {
   // Convert from JSON
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      uid: json['uid'],
-      email: json['email'],
+      uid: json['uid'] ?? '',
+      email: json['email'] ?? '',
       name: json['name'],
-      photoUrl: json['photoUrl'],
-      createdAt: json['createdAt'] != null
-        ? DateTime.parse(json['createdAt'])
-        : null,
+      photoUrl: json['photoUrl'] ?? json['photo_url'],
+      createdAt: _parseDate(json['createdAt']),
     );
   }
 
@@ -40,8 +39,15 @@ class UserModel extends UserEntity {
       'uid': uid,
       'email': email,
       'name': name,
-      'photoUrl': photoUrl,
-      'createdAt': createdAt?.toIso8601String(),
+      'photo_Url': photoUrl,
+      'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : null,
     };
+  }
+
+  static DateTime? _parseDate(dynamic date) {
+    if (date == null) return null;
+    if (date is Timestamp) return date.toDate();
+    if (date is String) return DateTime.tryParse(date);
+    return null;
   }
 }

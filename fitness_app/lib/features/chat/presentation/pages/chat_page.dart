@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../../../../injection_container.dart';
 import '../../../../core/theme/tenant.dart';
 import '../widgets/chat_tile.dart';
+import '../view_models/chat_list_view_model.dart';
 import '../../../../core/widgets/my_text_field.dart';
+import 'chat_detail_page.dart';
 
 class ChatPage extends StatelessWidget {
   const ChatPage({super.key});
@@ -10,9 +15,11 @@ class ChatPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
-    final isDark = theme.brightness == Brightness.dark;
+    final String currentUserId = FirebaseAuth.instance.currentUser?.uid ?? ''; 
 
-    return Scaffold(
+    return ChangeNotifierProvider(
+      create: (_) => sl<ChatListViewModel>()..loadChatRooms(currentUserId),
+      child: Scaffold(
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,7 +44,7 @@ class ChatPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: MyTextField(
-                controller: TextEditingController(), // Implement search functionality here
+                controller: TextEditingController(),
                 label: "Procurar conversa...",
                 prefixIcon: Icons.search,
               ),
@@ -47,46 +54,67 @@ class ChatPage extends StatelessWidget {
 
             // List
             Expanded(
-              child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                children: [
-                  // Unread message
-                  ChatTile(
-                    name: "Ricardo Silva (PT)",
-                    message: "Não te esqueças de trazer a toalha!",
-                    time: "10:30",
-                    isUnread: true,
-                    avatarColor: tenant.mainColor,
-                    icon: Icons.person,
-                  ),
-                  
-                  const SizedBox(height: 12),
-                  
-                  // Example 2
-                  ChatTile(
-                    name: "Dra. Ana Nutrição",
-                    message: "O plano alimentar já está disponível.",
-                    time: "Ontem",
-                    isUnread: false,
-                    avatarColor: Colors.greenAccent.shade700,
-                    icon: Icons.apple_rounded,
-                  ),
+                child: Consumer<ChatListViewModel>(
+                  builder: (context, viewModel, child) {
+                    // Loading State
+                    if (viewModel.isLoading && viewModel.rooms.isEmpty) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
 
-                  const SizedBox(height: 12),
+                    // Empty State
+                    if (viewModel.rooms.isEmpty) {
+                      return Center(
+                        child: Text(
+                          "Ainda não tens mensagens",
+                          style: TextStyle(color: colors.onSurface.withValues(alpha: 0.5)),
+                        ),
+                      );
+                    }
+                    // Data State
+                    return ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      itemCount: viewModel.rooms.length,
+                      itemBuilder: (context, index) {
+                        final room = viewModel.rooms[index];
+                        final otherUserId = room.getOtherUserId(currentUserId);
+                        final userProfile = viewModel.getProfile(otherUserId);
+                        final displayName = userProfile?.name ?? "A carregar...";
+                        // userProfile?.photoUrl here to display avatar
+                        
+                        // Simple time formatting
+                        final time = "${room.lastMessageTime.hour}:${room.lastMessageTime.minute.toString().padLeft(2, '0')}";
 
-                  // Example 3
-                  ChatTile(
-                    name: "Estúdio Central",
-                    message: "A tua mensalidade foi renovada.",
-                    time: "Seg",
-                    isUnread: false,
-                    avatarColor: Colors.orangeAccent,
-                    icon: Icons.business_rounded,
-                  ),
-                ],
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ChatDetailPage(
+                                  name: displayName, 
+                                  icon: Icons.person,
+                                  avatarColor: tenant.mainColor,
+                                  receiverId: otherUserId,
+                                  currentUserId: currentUserId,
+                                ),
+                              ),
+                            );
+                          },
+                          child: ChatTile(
+                            name: displayName,
+                            message: room.lastMessage,
+                            time: time,
+                            isUnread: false, // TODO: Implement unread logic
+                            avatarColor: tenant.mainColor,
+                            icon: Icons.person,
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

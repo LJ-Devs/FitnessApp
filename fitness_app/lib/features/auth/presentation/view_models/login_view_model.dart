@@ -17,6 +17,9 @@ class LoginViewModel extends ChangeNotifier {
   bool _obscurePassword = true;
   bool get obscurePassword => _obscurePassword;
 
+  // Safety flag to prevent memory leaks and crashes
+  bool _isDisposed = false;
+
   // --- Controllers ---
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -38,6 +41,9 @@ class LoginViewModel extends ChangeNotifier {
       password: passwordController.text.trim(),
     ));
 
+    // If the user left the screen during the request, stop here.
+    if (_isDisposed) return false;
+
     bool isSuccess = false;
 
     // Handle the result
@@ -45,6 +51,10 @@ class LoginViewModel extends ChangeNotifier {
       (failure) {
         _errorMessage = failure.message;
         isSuccess = false;
+        
+        // Only stop loading and update UI if we failed (user stays on screen)
+        _isLoading = false;
+        notifyListeners();
       },
       (user) {
         _errorMessage = null;
@@ -52,13 +62,12 @@ class LoginViewModel extends ChangeNotifier {
       },
     );
 
-    _isLoading = false;
-    notifyListeners();
     return isSuccess;
   }
 
   @override
   void dispose() {
+    _isDisposed = true;
     emailController.dispose();
     passwordController.dispose();
     super.dispose();

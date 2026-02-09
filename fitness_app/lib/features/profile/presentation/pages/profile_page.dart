@@ -14,7 +14,7 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     // Inject the ViewModel using the Service Locator
     return ChangeNotifierProvider(
-      create: (_) => sl<ProfileViewModel>(),
+      create: (_) => sl<ProfileViewModel>()..loadUserProfile(),
       child: const _ProfileView(),
     );
   }
