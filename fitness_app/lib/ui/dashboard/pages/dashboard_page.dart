@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/shared/my_action_card.dart';
-import '../../core/themes/tenant.dart'; 
+import '../../../core/theme/tenant.dart'; 
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});

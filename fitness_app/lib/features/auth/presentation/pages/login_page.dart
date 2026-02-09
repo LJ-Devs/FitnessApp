@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../routes/app_routes.dart';
-import '../../core/themes/tenant.dart';
+import '../../../../routes/app_routes.dart';
+import '../../../../core/theme/tenant.dart';
+import '../../../../injection_container.dart';
 import '../view_models/login_view_model.dart';
-import '../../../domain/auth/auth_provider.dart';
-import '../../core/shared/my_text_field.dart';
+import '../../../../ui/core/shared/my_text_field.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Inject the ViewModel
+    // Inject the ViewModel using GetIt (sl)
     return ChangeNotifierProvider(
-      create: (_) => LoginViewModel(),
+      create: (_) => sl<LoginViewModel>(),
       child: const _LoginForm(),
     );
   }
@@ -90,7 +90,7 @@ class _LoginFormState extends State<_LoginForm> {
                     label: "Email",
                     prefixIcon: Icons.email_outlined,
                     keyboardType: TextInputType.emailAddress,
-                    enabled: !viewModel.isLoading, // Bloqueia durante o login
+                    enabled: !viewModel.isLoading,
                   ),
           
                   const SizedBox(height: 16),
@@ -145,14 +145,11 @@ class _LoginFormState extends State<_LoginForm> {
                           // Close the keyboard
                           FocusScope.of(context).unfocus();
                           
-                          // Called when user taps "Login"
-                          final authProvider = context.read<AuthProvider>();
-                          final success = await viewModel.login(authProvider);
+                          final success = await viewModel.login();
                           
                           // Verify status
                           if (context.mounted) {
                             if (success) {
-                              // If login successful navigate to home and remove login from stack
                               Navigator.pushReplacementNamed(context, AppRoutes.home);
                             } else if (viewModel.errorMessage != null) {
                               // If failed show error message

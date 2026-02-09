@@ -3,13 +3,12 @@ import 'package:provider/provider.dart';
 // Routes
 import '../routes/app_routes.dart';
 //Themes
-import '../ui/core/themes/tenant.dart';
-import '../ui/core/themes/light_mode.dart';
-import '../ui/core/themes/dark_mode.dart';
-import '../ui/core/themes/theme_provider.dart';
+import '../core/theme/tenant.dart';
+import '../core/theme/light_mode.dart';
+import '../core/theme/dark_mode.dart';
+import '../core/theme/theme_provider.dart';
 // Auth
-import '../domain/auth/auth_provider.dart';
-import 'package:fitness_app/ui/auth/pages/auth_gate.dart';
+import 'package:fitness_app/features/auth/presentation/pages/auth_gate.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -19,9 +18,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         // Theme provider
-        ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        // Authentication Provider
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),   
       ],
       
       child: Consumer<ThemeProvider>(

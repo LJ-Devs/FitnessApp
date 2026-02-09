@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../core/themes/tenant.dart';
+import '../../../core/theme/tenant.dart';
 import '../widgets/chat_tile.dart';
 import '../../core/shared/my_text_field.dart';
 

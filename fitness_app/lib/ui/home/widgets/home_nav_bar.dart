@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import '../../core/themes/tenant.dart';
+import '../../../core/theme/tenant.dart';
 
 class HomeNavBar extends StatelessWidget {
   final int selectedIndex;

@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../core/themes/tenant.dart';
+import '../../../../core/theme/tenant.dart';
+import '../../../../injection_container.dart';
 import '../view_models/register_view_model.dart';
-import '../../../domain/auth/auth_provider.dart';
-import '../../../ui/core/shared/my_text_field.dart';
+import '../../../../ui/core/shared/my_text_field.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Inject with GetIt (sl)
     return ChangeNotifierProvider(
-      create: (_) => RegisterViewModel(),
+      create: (_) => sl<RegisterViewModel>(),
       child: const _RegisterForm(),
     );
   }
@@ -126,9 +127,8 @@ class _RegisterFormState extends State<_RegisterForm> {
                           ? null
                           : () async {
                               FocusScope.of(context).unfocus();
-                              
-                              final authProvider = context.read<AuthProvider>();
-                              final success = await viewModel.register(authProvider);
+
+                              final success = await viewModel.register();
                               
                               if (context.mounted) {
                                 if (success) {

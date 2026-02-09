@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
-import '../../../domain/auth/auth_provider.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditProfileViewModel extends ChangeNotifier {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../routes/app_routes.dart';
-import '../../core/themes/tenant.dart';
+import '../../../core/theme/tenant.dart';
 import '../widgets/profile_option.dart';
 import '../view_models/profile_view_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
