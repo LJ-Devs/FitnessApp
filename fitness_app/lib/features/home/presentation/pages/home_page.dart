@@ -1,10 +1,15 @@
-import 'package:fitness_app/ui/profile/pages/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../../injection_container.dart';
 import '../view_models/home_view_model.dart';
-import '../widgets/home_nav_bar.dart';
-import '../../dashboard/pages/dashboard_page.dart';
-import 'package:fitness_app/ui/chat/pages/chat_page.dart';
+import '../../widgets/home_nav_bar.dart';
+
+// Features
+import '../../../dashboard/presentation/pages/dashboard_page.dart';
+// import '../../../chat/presentation/pages/chat_page.dart';
+// import '../../../profile/presentation/pages/profile_page.dart';
+import '../../../../ui/chat/pages/chat_page.dart';
+import '../../../../ui/profile/pages/profile_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -12,7 +17,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => HomeViewModel(),
+      create: (_) => sl<HomeViewModel>(),
       child: const _HomeView(),
     );
   }
@@ -25,8 +30,9 @@ class _HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = context.watch<HomeViewModel>();
 
+    // Content Pages
     final List<Widget> pages = [
-      const DashboardPage(), 
+      const DashboardPage(),
       const ChatPage(),
       const ProfilePage(),
     ];

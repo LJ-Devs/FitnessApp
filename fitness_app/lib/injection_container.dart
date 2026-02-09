@@ -12,6 +12,8 @@ import 'features/auth/domain/usecases/register_usecase.dart';
 // Presentation
 import 'features/auth/presentation/view_models/login_view_model.dart';
 import 'features/auth/presentation/view_models/register_view_model.dart';
+import 'features/home/presentation/view_models/home_view_model.dart';
+import 'features/dashboard/presentation/view_models/dashboard_view_model.dart';
 
 // Service Locator
 final sl = GetIt.instance;
@@ -42,6 +44,12 @@ Future<void> init() async {
   sl.registerLazySingleton<ProfileRemoteDataSource>(
     () => ProfileRemoteDataSourceImpl(firebaseStorage: sl()),
   );
+
+  // ------------ Features - Home ------------
+  sl.registerFactory(() => HomeViewModel()); // Se não tiver argumentos no construtor
+
+  // ------------ Features - Dashboard ------------
+  sl.registerFactory(() => DashboardViewModel());
 
   // External Dependencies
   sl.registerLazySingleton(() => FirebaseAuth.instance);

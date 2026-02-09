@@ -1,12 +1,29 @@
 import 'package:flutter/material.dart';
-import '../../core/shared/my_action_card.dart';
-import '../../../core/theme/tenant.dart'; 
+import 'package:provider/provider.dart';
+import '../../../../injection_container.dart';
+import '../view_models/dashboard_view_model.dart';
+import '../../../../ui/core/shared/my_action_card.dart';
+import '../../../../core/theme/tenant.dart'; 
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => sl<DashboardViewModel>(),
+      child: const _DashboardView(),
+    );
+  }
+}
+
+class _DashboardView extends StatelessWidget {
+  const _DashboardView();
+
+  @override
+  Widget build(BuildContext context) {
+    final viewModel = context.watch<DashboardViewModel>();
+
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
@@ -19,7 +36,7 @@ class DashboardPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // HEADER
-              _buildHeader(context),
+              _buildHeader(context, viewModel),
               
               const SizedBox(height: 24),
               
@@ -81,7 +98,7 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader(BuildContext context, DashboardViewModel viewModel) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
 
@@ -92,7 +109,7 @@ class DashboardPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Olá, 'nome' 👋", 
+              "Olá, ${viewModel.userName} 👋", 
               style: TextStyle(
                 fontSize: 26,
                 fontWeight: FontWeight.bold,
