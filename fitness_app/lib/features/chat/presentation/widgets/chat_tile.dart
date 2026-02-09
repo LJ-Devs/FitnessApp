@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../core/theme/tenant.dart';
+import '../../../../core/theme/tenant.dart';
 
 class ChatTile extends StatelessWidget {
   final String name;

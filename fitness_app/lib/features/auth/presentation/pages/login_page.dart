@@ -4,7 +4,7 @@ import '../../../../routes/app_routes.dart';
 import '../../../../core/theme/tenant.dart';
 import '../../../../injection_container.dart';
 import '../view_models/login_view_model.dart';
-import '../../../../ui/core/shared/my_text_field.dart';
+import '../../../../core/widgets/my_text_field.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});

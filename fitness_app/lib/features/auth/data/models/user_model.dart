@@ -3,18 +3,12 @@ import '../../domain/entities/user_entity.dart';
 
 class UserModel extends UserEntity {
   UserModel({
-    required String uid,
-    required String email,
-    String? name,
-    String? photoUrl,
-    DateTime? createdAt,
-  }) : super(
-        uid: uid,
-        email: email,
-        name: name,
-        photoUrl: photoUrl,
-        createdAt: createdAt 
-        );
+    required super.uid,
+    required super.email,
+    super.name,
+    super.photoUrl,
+    super.createdAt,
+  });
 
   // Convert from Firebase User to our UserModel
   factory UserModel.fromFirebaseUser(User user) {

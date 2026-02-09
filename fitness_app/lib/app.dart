@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 // Routes
-import '../routes/app_routes.dart';
+import 'routes/app_routes.dart';
 //Themes
-import '../core/theme/tenant.dart';
-import '../core/theme/light_mode.dart';
-import '../core/theme/dark_mode.dart';
-import '../core/theme/theme_provider.dart';
+import 'core/theme/tenant.dart';
+import 'core/theme/light_mode.dart';
+import 'core/theme/dark_mode.dart';
+import 'core/theme/theme_provider.dart';
 // Auth
 import 'package:fitness_app/features/auth/presentation/pages/auth_gate.dart';
 

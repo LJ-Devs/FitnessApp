@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../routes/app_routes.dart';
-import '../../../core/theme/tenant.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../../../../routes/app_routes.dart';
+import '../../../../core/theme/tenant.dart';
+import '../../../../injection_container.dart';
 import '../widgets/profile_option.dart';
 import '../view_models/profile_view_model.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Create the ViewModel
+    // Inject the ViewModel using the Service Locator
     return ChangeNotifierProvider(
-      create: (_) => ProfileViewModel(),
-      child: const _ProfileView(), // Separate the actual UI
+      create: (_) => sl<ProfileViewModel>(),
+      child: const _ProfileView(),
     );
   }
 }

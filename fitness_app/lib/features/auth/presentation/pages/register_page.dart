@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../../core/theme/tenant.dart';
 import '../../../../injection_container.dart';
 import '../view_models/register_view_model.dart';
-import '../../../../ui/core/shared/my_text_field.dart';
+import '../../../../core/widgets/my_text_field.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});

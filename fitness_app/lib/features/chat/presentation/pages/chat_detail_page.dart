@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../core/shared/my_app_bar.dart';
+import '../../../../core/widgets/my_app_bar.dart';
 import '../widgets/message_bubble.dart';
 
 class ChatDetailPage extends StatelessWidget {

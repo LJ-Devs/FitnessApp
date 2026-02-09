@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../injection_container.dart';
 import '../view_models/dashboard_view_model.dart';
-import '../../../../ui/core/shared/my_action_card.dart';
+import '../../../../core/widgets/my_action_card.dart';
 import '../../../../core/theme/tenant.dart'; 
 
 class DashboardPage extends StatelessWidget {

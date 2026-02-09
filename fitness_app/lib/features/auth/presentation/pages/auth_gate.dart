@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../../home/presentation/pages/home_page.dart'; 
+import '../../../home/presentation/pages/home_page.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart'; 
 import 'login_page.dart'; 
 
 class AuthGate extends StatelessWidget {
@@ -16,6 +17,8 @@ class AuthGate extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
              return const Scaffold(body: Center(child: CircularProgressIndicator()));
         }
+
+        FlutterNativeSplash.remove();
 
         // User is logged in
         if (snapshot.hasData) {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../features/auth/presentation/pages/login_page.dart';
 import '../features/auth/presentation/pages/register_page.dart';
 import '../features/home/presentation/pages/home_page.dart';
-import '../ui/profile/pages/edit_profile_page.dart';
+import '../features/profile/presentation/pages/edit_profile_page.dart';
 
 class AppRoutes {
   // Constant do avoid errors

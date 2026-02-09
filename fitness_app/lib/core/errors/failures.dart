@@ -5,15 +5,15 @@ abstract class Failure {
 
 // Generic server error (500, 404)
 class ServerFailure extends Failure {
-  ServerFailure([String message = 'Ocorreu um erro no servidor']) : super(message);
+  ServerFailure([super.message = 'Ocorreu um erro no servidor']);
 }
 
 // Conextion error
 class NetworkFailure extends Failure {
-  NetworkFailure([String message = 'Verifique a conexão à internet']) : super(message);
+  NetworkFailure([super.message = 'Verifique a conexão à internet']);
 }
 
 // Auth error
 class AuthFailure extends Failure {
-  AuthFailure([String message = 'Credenciais inválidas']) : super(message);
+  AuthFailure([super.message = 'Credenciais inválidas']);
 }

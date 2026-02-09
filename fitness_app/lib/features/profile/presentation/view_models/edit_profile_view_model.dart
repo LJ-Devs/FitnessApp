@@ -1,9 +1,17 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../domain/usecases/update_profile_usecase.dart';
 
 class EditProfileViewModel extends ChangeNotifier {
+  // Dependency Injection
+  final UpdateProfileUseCase updateProfileUseCase;
+
+  EditProfileViewModel({required this.updateProfileUseCase}) {
+    _loadCurrentData();
+  }
+
   bool _isDisposed = false;
   
   bool _isLoading = false;
@@ -20,10 +28,6 @@ class EditProfileViewModel extends ChangeNotifier {
   // Input Controllers
   final nameController = TextEditingController();
   final emailController = TextEditingController();
-
-  EditProfileViewModel() {
-    _loadCurrentData();
-  }
 
   // Load current user data into controllers
   void _loadCurrentData() {
@@ -53,7 +57,7 @@ class EditProfileViewModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> saveChanges(AuthProvider authProvider) async {
+  Future<bool> saveChanges() async {
     _setLoading(true);
     _errorMessage = null;
 
@@ -66,21 +70,35 @@ class EditProfileViewModel extends ChangeNotifier {
       return false;
     }
 
-    try {
-      // If a new image was selected, upload it
-      if (_selectedImage != null) {
-        await authProvider.updateProfileImage(_selectedImage!);
-      }
-      // Update display name in Firebase Auth
-      await authProvider.updateUserData(name: newName);
-      
-      _setLoading(false);
-      return true; // Success
-    } catch (e) {
-      _errorMessage = "Erro ao guardar: $e";
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      _errorMessage = "Sessão inválida.";
       _setLoading(false);
       return false;
     }
+
+    // Call Domain Layer
+    final result = await updateProfileUseCase(UpdateProfileParams(
+      uid: user.uid,
+      name: newName,
+      imageFile: _selectedImage,
+    ));
+
+    bool success = false;
+
+    // Handle Result
+    result.fold(
+      (failure) {
+        _errorMessage = "Erro ao guardar: ${failure.message}";
+        success = false;
+      },
+      (_) {
+        success = true;
+      },
+    );
+
+    _setLoading(false);
+    return success;
   }
 
   void _setLoading(bool value) {

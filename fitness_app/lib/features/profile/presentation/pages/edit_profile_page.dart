@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
-import '../../core/shared/my_app_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../../../../injection_container.dart';
 import '../view_models/edit_profile_view_model.dart';
-import '../../../domain/auth/auth_provider.dart';
-import 'package:fitness_app/ui/core/shared/my_text_field.dart';
 import '../widgets/profile_avatar_selector.dart';
+import '../../../../core/widgets/my_app_bar.dart'; 
+import '../../../../core/widgets/my_text_field.dart';
 
 class EditProfilePage extends StatelessWidget {
   const EditProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // ViewModel injection with Provider
+    // ViewModel injection using Service Locator
     return ChangeNotifierProvider(
-      create: (_) => EditProfileViewModel(),
+      create: (_) => sl<EditProfileViewModel>(),
       child: const _EditProfileForm(),
     );
   }
@@ -81,8 +81,7 @@ class _EditProfileForm extends StatelessWidget {
                           FocusScope.of(context).unfocus();
                           
                           // Call logic to save
-                          final authProvider = context.read<AuthProvider>();
-                          final success = await viewModel.saveChanges(authProvider);
+                          final success = await viewModel.saveChanges();
 
                           // Verify if widget is still mounted
                           if (context.mounted) {

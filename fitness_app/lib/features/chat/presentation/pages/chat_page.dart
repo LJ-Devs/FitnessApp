@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../core/theme/tenant.dart';
+import '../../../../core/theme/tenant.dart';
 import '../widgets/chat_tile.dart';
-import '../../core/shared/my_text_field.dart';
+import '../../../../core/widgets/my_text_field.dart';
 
 class ChatPage extends StatelessWidget {
   const ChatPage({super.key});

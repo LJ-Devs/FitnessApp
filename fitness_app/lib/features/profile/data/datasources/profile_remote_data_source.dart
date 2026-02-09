@@ -1,35 +1,62 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../../auth/data/models/user_model.dart';
 
-// Contract (Interface)
+// Contract
 abstract class ProfileRemoteDataSource {
   Future<String> uploadProfileImage(File imageFile, String uid);
+  Future<void> updateUserData({required String uid, required String name, String? photoUrl});
+  Future<UserModel> getUserProfile(String uid);
 }
 
 // Implementation
 class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   final FirebaseStorage firebaseStorage;
+  final FirebaseAuth firebaseAuth;
+  final FirebaseFirestore firebaseFirestore;
 
-  // Dependency Injection
-  ProfileRemoteDataSourceImpl({required this.firebaseStorage});
+  ProfileRemoteDataSourceImpl({
+    required this.firebaseStorage,
+    required this.firebaseAuth,
+    required this.firebaseFirestore,
+  });
 
   @override
   Future<String> uploadProfileImage(File imageFile, String uid) async {
-    try {
-      // Define path: users/{uid}/profile.jpg
-      // This overwrites the previous image, is good for saving space.
-      final ref = firebaseStorage.ref().child('users/$uid/profile.jpg');
+    final ref = firebaseStorage.ref().child('users/$uid/profile.jpg');
+    await ref.putFile(imageFile);
+    return await ref.getDownloadURL();
+  }
 
-      // Upload file
-      await ref.putFile(imageFile);
+  @override
+  Future<void> updateUserData({required String uid, required String name, String? photoUrl}) async {
+    final user = firebaseAuth.currentUser;
+    if (user != null) {
+      await user.updateDisplayName(name);
+      if (photoUrl != null) {
+        await user.updatePhotoURL(photoUrl);
+      }
+    }
 
-      // Get and return the URL
-      final url = await ref.getDownloadURL();
-      return url;
-      
-    } catch (e) {
-      // Throw a generic exception here
-      throw Exception('Failed to upload image: $e');
+    await firebaseFirestore.collection('users').doc(uid).set({
+      'name': name,
+      if (photoUrl != null) 'photo_url': photoUrl,
+      'updatedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
+  }
+
+  @override
+  Future<UserModel> getUserProfile(String uid) async {
+    final doc = await firebaseFirestore.collection('users').doc(uid).get();
+    
+    if (doc.exists) {
+      return UserModel.fromJson(doc.data()!);
+    } else {
+      final user = firebaseAuth.currentUser;
+      if (user == null) throw Exception("User not found");
+      return UserModel.fromFirebaseUser(user);
     }
   }
 }

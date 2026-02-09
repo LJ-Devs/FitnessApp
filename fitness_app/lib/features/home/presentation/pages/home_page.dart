@@ -8,8 +8,8 @@ import '../../widgets/home_nav_bar.dart';
 import '../../../dashboard/presentation/pages/dashboard_page.dart';
 // import '../../../chat/presentation/pages/chat_page.dart';
 // import '../../../profile/presentation/pages/profile_page.dart';
-import '../../../../ui/chat/pages/chat_page.dart';
-import '../../../../ui/profile/pages/profile_page.dart';
+import '../../../chat/presentation/pages/chat_page.dart';
+import '../../../profile/presentation/pages/profile_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
