@@ -8,6 +8,7 @@ import '../../domain/usecases/get_chat_rooms_usecase.dart';
 class ChatListViewModel extends ChangeNotifier {
   final GetChatRoomsUseCase getChatRoomsUseCase;
   final GetProfileUseCase getProfileUseCase;
+  final searchController = TextEditingController();
 
   ChatListViewModel({
     required this.getChatRoomsUseCase,
@@ -83,6 +84,7 @@ class ChatListViewModel extends ChangeNotifier {
   void dispose() {
     _isDisposed = true;
     _roomsSubscription?.cancel();
+    searchController.dispose();
     super.dispose();
   }
 }

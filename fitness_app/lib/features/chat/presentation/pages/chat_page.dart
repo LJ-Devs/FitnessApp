@@ -43,11 +43,13 @@ class ChatPage extends StatelessWidget {
             // Search Bar TODO
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: MyTextField(
-                controller: TextEditingController(),
-                label: "Procurar conversa...",
-                prefixIcon: Icons.search,
-              ),
+                child: Consumer<ChatListViewModel>(builder: (context, viewModel, _) {
+                  return MyTextField(
+                    controller: viewModel.searchController, label: "Procurar conversa...",
+                    prefixIcon: Icons.search,
+                  );
+                },
+              )
             ),
 
             const SizedBox(height: 24),
