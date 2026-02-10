@@ -24,6 +24,8 @@ class MyTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return TextField(
       controller: controller,
       obscureText: obscureText,
@@ -35,11 +37,11 @@ class MyTextField extends StatelessWidget {
         prefixIcon: Icon(prefixIcon),
         suffixIcon: suffixIcon,
         // Keep the field visually consistent when disabled by filling
-        filled: enabled,
+        filled: true,
 
         fillColor: enabled 
-          ? Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3)
-          : Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+          ? colorScheme.surfaceContainerHighest.withValues(alpha: 0.3)
+          : colorScheme.surfaceContainerHighest.withValues(alpha: 0.8),
       ),
     );
   }
