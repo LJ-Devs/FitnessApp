@@ -149,9 +149,7 @@ class _LoginFormState extends State<_LoginForm> {
                           
                           // Verify status
                           if (context.mounted) {
-                            if (success) {
-                              Navigator.pushReplacementNamed(context, AppRoutes.home);
-                            } else if (viewModel.errorMessage != null) {
+                            if (!success && viewModel.errorMessage != null) {
                               // If failed show error message
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
