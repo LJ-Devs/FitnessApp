@@ -44,7 +44,7 @@ class ChatListViewModel extends ChangeNotifier {
       },
       onError: (error) {
         if (_isDisposed) return;
-        print("Erro ao carregar salas: $error");
+        debugPrint("Erro ao carregar salas: $error");
         _isLoading = false;
         notifyListeners();
       },
@@ -60,6 +60,8 @@ class ChatListViewModel extends ChangeNotifier {
       
       if (!_userProfiles.containsKey(otherUserId)) {
         final result = await getProfileUseCase(otherUserId);
+        
+        if (_isDisposed) return;
         
         result.fold(
           (failure) => null,
