@@ -9,6 +9,7 @@ class UserModel extends UserEntity {
     super.name,
     super.photoUrl,
     super.createdAt,
+    super.updatedAt,
   });
 
   // Convert from Firebase User to our UserModel
@@ -19,6 +20,7 @@ class UserModel extends UserEntity {
       name: user.displayName,
       photoUrl: user.photoURL,
       createdAt: user.metadata.creationTime,
+      updatedAt: user.metadata.lastSignInTime,
     );
   }
 
@@ -30,6 +32,7 @@ class UserModel extends UserEntity {
       name: json['name'],
       photoUrl: json['photo_url'] ?? json['photoUrl'],
       createdAt: _parseDate(json['createdAt']),
+      updatedAt: _parseDate(json['updatedAt']),
     );
   }
 
@@ -41,6 +44,7 @@ class UserModel extends UserEntity {
       'name': name,
       'photo_url': photoUrl,
       'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : null,
+      'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
     };
   }
 

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../../../auth/domain/usecases/logout_usecase.dart';
 import '../../domain/usecases/get_profile_usecase.dart';
@@ -24,6 +23,7 @@ class ProfileViewModel extends ChangeNotifier {
   String _userName = "";
   String _joinDate = "";
   String? _avatarUrl;
+  DateTime? _lastUpdateDate;
   String _appVersion = "";
   
   // Safety flag
@@ -34,8 +34,17 @@ class ProfileViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String get userName => _userName;
   String get joinDate => _joinDate;
-  String? get avatarUrl => _avatarUrl;
   String get appVersion => _appVersion;
+
+  String? get avatarUrl {
+    if (_avatarUrl == null) return null;
+
+    final version = _lastUpdateDate?.millisecondsSinceEpoch.toString();
+    if (version != null) {
+      return '$_avatarUrl?v=$version';
+    }
+    return _avatarUrl;
+  }
 
   void _listenToAuthChanges() {
     _authSubscription = _firebaseAuth.userChanges().listen((user) {
@@ -58,9 +67,8 @@ class ProfileViewModel extends ChangeNotifier {
     if (_isDisposed) return; // Safety check
     _appVersion = "v${packageInfo.version} (${packageInfo.buildNumber})";
 
-    final user = FirebaseAuth.instance.currentUser;
+    final user = _firebaseAuth.currentUser;
     if (user != null) {
-      await Future.delayed(const Duration(milliseconds: 500));
       // Load user data from Firestore
       final result = await getProfileUseCase(user.uid);
 
@@ -73,13 +81,8 @@ class ProfileViewModel extends ChangeNotifier {
         (userEntity) {
            _userName = userEntity.name ?? "Utilizador";
            _avatarUrl = userEntity.photoUrl;
+           _lastUpdateDate = userEntity.updatedAt;
            
-           // Avoid cache logic
-           if (_avatarUrl != null && !_isDisposed) {
-             try {
-                CachedNetworkImageProvider(_avatarUrl!).evict(); 
-             } catch (_) {}
-           }
            if (userEntity.createdAt != null) {
              _joinDate = "Membro desde ${_formatDate(userEntity.createdAt!)}";
            } else {
