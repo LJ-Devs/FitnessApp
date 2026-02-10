@@ -8,6 +8,7 @@ class ChatTile extends StatelessWidget {
   final bool isUnread;
   final Color avatarColor;
   final IconData icon;
+  final VoidCallback? onTap;
 
   const ChatTile({
     super.key,
@@ -17,6 +18,7 @@ class ChatTile extends StatelessWidget {
     required this.isUnread,
     required this.avatarColor,
     required this.icon,
+    this.onTap,
   });
 
   @override
@@ -29,9 +31,7 @@ class ChatTile extends StatelessWidget {
       color: theme.cardColor,
       borderRadius: BorderRadius.circular(20),
       child: InkWell(
-        onTap: () {
-          // TODO - Open chat
-        },
+        onTap: onTap,
         borderRadius: BorderRadius.circular(20),
         child: Container(
           padding: const EdgeInsets.all(16),

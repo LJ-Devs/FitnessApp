@@ -86,28 +86,29 @@ class ChatPage extends StatelessWidget {
                         // Simple time formatting
                         final time = "${room.lastMessageTime.hour}:${room.lastMessageTime.minute.toString().padLeft(2, '0')}";
 
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ChatDetailPage(
-                                  name: displayName, 
-                                  icon: Icons.person,
-                                  avatarColor: tenant.mainColor,
-                                  receiverId: otherUserId,
-                                  currentUserId: currentUserId,
-                                ),
-                              ),
-                            );
-                          },
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 12), 
                           child: ChatTile(
                             name: displayName,
                             message: room.lastMessage,
                             time: time,
-                            isUnread: false, // TODO: Implement unread logic
+                            isUnread: false, 
                             avatarColor: tenant.mainColor,
                             icon: Icons.person,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ChatDetailPage(
+                                    name: displayName, 
+                                    icon: Icons.person,
+                                    avatarColor: tenant.mainColor,
+                                    receiverId: otherUserId,
+                                    currentUserId: currentUserId,
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         );
                       },
