@@ -14,7 +14,7 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     // Inject the ViewModel using the Service Locator
     return ChangeNotifierProvider(
-      create: (_) => sl<ProfileViewModel>()..loadUserProfile(),
+      create: (_) => sl<ProfileViewModel>(),
       child: const _ProfileView(),
     );
   }
@@ -105,14 +105,13 @@ class _ProfileView extends StatelessWidget {
               ProfileOption(
                 title: "Dados Pessoais",
                 icon: Icons.person,
-                onTap: () {
+                onTap: () async {
                   // Change to EditProfilePage and wait for result
-                  Navigator.pushNamed(context, AppRoutes.editProfile).then((_) {
+                  await Navigator.pushNamed(context, AppRoutes.editProfile);
                     // After return, reload profile
-                    if (context.mounted) {
-                      context.read<ProfileViewModel>().loadUserProfile();
-                    }
-                  });
+                  if (context.mounted) {
+                    context.read<ProfileViewModel>().loadUserProfile();
+                  }
                 },
               ),
               const SizedBox(height: 12),
