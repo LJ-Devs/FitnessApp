@@ -12,13 +12,19 @@ class DashboardViewModel extends ChangeNotifier {
   }
 
   String _greetingName = 'Atleta';
-  String? _avatarUrl;
+  String? _rawAvatarUrl;
+  DateTime? _lastUpdateDate;
   bool _isLoading = false;
   StreamSubscription? _authSubscription;
 
   String get greetingName => _greetingName;
-  String? get avatarUrl => _avatarUrl;
   bool get isLoading => _isLoading;
+
+  String? get avatarUrl {
+    if (_rawAvatarUrl == null) return null;
+    final version = _lastUpdateDate?.millisecondsSinceEpoch.toString();
+    return version != null ? '$_rawAvatarUrl?v=version' : _rawAvatarUrl;
+  }
 
   // Safety cheack
   bool _isDisposed = false;
@@ -39,8 +45,6 @@ class DashboardViewModel extends ChangeNotifier {
     final user = _firebaseAuth.currentUser;
 
     if (user != null) {
-      await Future.delayed(const Duration(milliseconds: 500));
-      if (_isDisposed) return;
       _isLoading = true;
       notifyListeners();
 
@@ -57,7 +61,8 @@ class DashboardViewModel extends ChangeNotifier {
             // Extract only the first name
             _greetingName = userEntity.name!.split(' ').first;
           }
-          _avatarUrl = userEntity.photoUrl;
+          _rawAvatarUrl = userEntity.photoUrl;
+          _lastUpdateDate = userEntity.updatedAt;
         },
       );
 
