@@ -8,8 +8,11 @@ class ThemeProvider extends ChangeNotifier {
   ThemeMode get themeMode => _themeMode;
 
   bool get isDarkMode {
-    if (_themeMode == ThemeMode.system) return false;
-    return _themeMode == ThemeMode.dark;
+    if (_themeMode == ThemeMode.dark) return true;
+    if (_themeMode == ThemeMode.light) return false;
+
+    final brightness = WidgetsBinding.instance.platformDispatcher.platformBrightness;
+    return brightness == Brightness.dark;
   }
 
   ThemeProvider() {
@@ -21,7 +24,14 @@ class ThemeProvider extends ChangeNotifier {
     notifyListeners();
     
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_prefsKey, _themeMode.toString());
+    await prefs.setString(_prefsKey, _themeMode.name);
+  }
+
+  void setSystemTheme() async {
+    _themeMode = ThemeMode.system;
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_prefsKey, _themeMode.name);
   }
 
   Future<void> _loadTheme() async {
@@ -29,9 +39,9 @@ class ThemeProvider extends ChangeNotifier {
     final savedTheme = prefs.getString(_prefsKey);
 
     if (savedTheme != null) {
-      if (savedTheme == ThemeMode.light.toString()) {
+      if (savedTheme == ThemeMode.light.name) {
         _themeMode = ThemeMode.light;
-      } else if (savedTheme == ThemeMode.dark.toString()) {
+      } else if (savedTheme == ThemeMode.dark.name) {
         _themeMode = ThemeMode.dark;
       } else {
         _themeMode = ThemeMode.system;
