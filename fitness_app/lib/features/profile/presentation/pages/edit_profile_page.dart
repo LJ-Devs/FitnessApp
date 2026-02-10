@@ -86,10 +86,14 @@ class _EditProfileForm extends StatelessWidget {
                           // Verify if widget is still mounted
                           if (context.mounted) {
                             if (success) {
-                              Navigator.pop(context); // Back to previous screen
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text("Dados atualizados com sucesso!")),
+                                const SnackBar(
+                                  content: Text("Dados atualizados com sucesso!"),
+                                  behavior: SnackBarBehavior.floating,
+                                ),
                               );
+                              Navigator.pop(context); // Back to previous screen
+
                             } else if (viewModel.errorMessage != null) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
