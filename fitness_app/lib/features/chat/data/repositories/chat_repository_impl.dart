@@ -11,10 +11,10 @@ class ChatRepositoryImpl implements ChatRepository {
   ChatRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, void>> sendMessage(MessageEntity message) async {
+  Future<Either<Failure, Unit>> sendMessage(MessageEntity message) async {
     try {
       await remoteDataSource.sendMessage(message);
-      return const Right(null);
+      return const Right(unit);
     } catch (e) {
       return Left(ServerFailure("Ocorreu um erro, tente novamente"));
     }

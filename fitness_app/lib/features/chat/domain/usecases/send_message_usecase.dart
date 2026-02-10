@@ -8,7 +8,7 @@ class SendMessageUseCase {
 
   SendMessageUseCase(this.repository);
 
-  Future<Either<Failure, void>> call(MessageEntity message) {
+  Future<Either<Failure, Unit>> call(MessageEntity message) {
     return repository.sendMessage(message);
   }
 }
