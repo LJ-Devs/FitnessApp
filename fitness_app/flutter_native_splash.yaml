@@ -1,0 +1,25 @@
+# =============================================
+# Image file must be 1152px centered logo 768px
+# =============================================
+flutter_native_splash:
+  android: true
+  ios: true
+  web: false
+
+  # Android < 12 and iOS
+  color: "#1152D4"
+  image: assets/images/logo_white.png
+  color_dark: "#121212"
+  image_dark: assets/images/logo.png
+
+  # ANDROID 12+ 
+  android_12:
+    image: assets/images/logo_white.png
+    color: "#1152D4"
+    image_dark: assets/images/logo.png
+    color_dark: "#121212"
+
+    icon_background_color: "#1152D4" 
+    icon_background_color_dark: "#121212"
+
+    # branding: assets/images/branding.png

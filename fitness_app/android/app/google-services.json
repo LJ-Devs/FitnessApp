@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "481161788061",
+    "project_id": "lj-fitness-app",
+    "storage_bucket": "lj-fitness-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:481161788061:android:28501472405edb032ff274",
+        "android_client_info": {
+          "package_name": "com.example.fitness_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzkjvGkRQhJj8WAQfbT-2yTaAoShEGaEE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
