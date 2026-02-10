@@ -15,11 +15,11 @@ class AuthGate extends StatelessWidget {
         
         // Loading while Firebase verification
         if (snapshot.connectionState == ConnectionState.waiting) {
-             return const Scaffold(body: Center(child: CircularProgressIndicator()));
+          return const SizedBox.shrink();
         }
-
-        FlutterNativeSplash.remove();
-
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          FlutterNativeSplash.remove();
+        });
         // User is logged in
         if (snapshot.hasData) {
           return const HomePage();
