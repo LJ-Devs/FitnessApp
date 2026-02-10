@@ -51,16 +51,16 @@ class LoginViewModel extends ChangeNotifier {
       (failure) {
         _errorMessage = failure.message;
         isSuccess = false;
-        
-        // Only stop loading and update UI if we failed (user stays on screen)
-        _isLoading = false;
-        notifyListeners();
       },
       (user) {
         _errorMessage = null;
         isSuccess = true;
       },
     );
+
+    _isLoading = false;
+
+    if (!_isDisposed) notifyListeners();
 
     return isSuccess;
   }
