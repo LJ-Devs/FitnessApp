@@ -66,7 +66,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
       
       throw Exception("User not found");
     } catch (e) {
-      // No conextion no cache
+      // No connection no cache
       final user = firebaseAuth.currentUser;
       if (user != null) {
         return UserModel.fromFirebaseUser(user);
