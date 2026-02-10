@@ -79,10 +79,12 @@ class ChatPage extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final room = viewModel.rooms[index];
                         final otherUserId = room.getOtherUserId(currentUserId);
+                        if (otherUserId == null) {
+                          return const SizedBox.shrink();
+                        }
                         final userProfile = viewModel.getProfile(otherUserId);
-                        final displayName = userProfile?.name ?? "A carregar...";
+                        final displayName = userProfile?.name ?? "Utilizador";
                         // userProfile?.photoUrl here to display avatar
-                        
                         // Simple time formatting
                         final time = "${room.lastMessageTime.hour}:${room.lastMessageTime.minute.toString().padLeft(2, '0')}";
 

@@ -57,6 +57,8 @@ class ChatListViewModel extends ChangeNotifier {
 
     for (var room in rooms) {
       final otherUserId = room.getOtherUserId(currentUserId);
+
+      if (otherUserId == null) continue;
       
       if (!_userProfiles.containsKey(otherUserId)) {
         final result = await getProfileUseCase(otherUserId);

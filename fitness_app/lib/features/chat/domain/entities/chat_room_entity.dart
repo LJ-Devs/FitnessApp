@@ -16,11 +16,12 @@ class ChatRoomEntity extends Equatable {
   });
 
   // Helper to get the 'other' user
-  String getOtherUserId(String myUserId) {
-    return participants.firstWhere(
-      (id) => id != myUserId,
-      orElse: () => "Unknown",
-    );
+  String? getOtherUserId(String myUserId) {
+    try {
+      return participants.firstWhere((id) => id != myUserId);
+    } catch (_) {
+      return null;
+    }
   }
 
   @override
