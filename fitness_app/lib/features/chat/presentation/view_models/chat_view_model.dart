@@ -31,6 +31,8 @@ class ChatViewModel extends ChangeNotifier {
   // --- Stream Management ---
   StreamSubscription<List<MessageEntity>>? _messagesSubscription;
 
+  bool _isDisposed = false;
+
   // Initializes the chat listener
   void initChat(String currentUserId, String receiverId) {
     _isLoading = true;
@@ -43,6 +45,8 @@ class ChatViewModel extends ChangeNotifier {
     // Listen to the UseCase Stream
     _messagesSubscription = getMessagesUseCase(currentUserId, receiverId).listen(
       (newMessages) {
+        if (_isDisposed) return;
+
         _messages = newMessages;
         _isLoading = false;
         notifyListeners();
@@ -77,6 +81,8 @@ class ChatViewModel extends ChangeNotifier {
     // Call the Domain Layer
     final result = await sendMessageUseCase(message);
 
+    if (_isDisposed) return;
+
     result.fold(
       (failure) {
         // Handle failure: Restore text and show error
@@ -94,20 +100,26 @@ class ChatViewModel extends ChangeNotifier {
 
   // Helper method to scroll to the bottom of the list
   void _scrollToBottom() {
-    if (scrollController.hasClients) {
+    if (!scrollController.hasClients || _isDisposed) return;
       // Small delay to ensure the list has rendered the new item
       Future.delayed(const Duration(milliseconds: 100), () {
+        if (_isDisposed || !scrollController.hasClients) return;
+      
+      try {
         scrollController.animateTo(
           scrollController.position.maxScrollExtent,
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOut,
         );
+      } catch(e) {
+        debugPrint("Erro ao fazer scroll: $e");
+      }
       });
-    }
   }
 
   @override
   void dispose() {
+    _isDisposed = true;
     _messagesSubscription?.cancel();
     messageController.dispose();
     scrollController.dispose();

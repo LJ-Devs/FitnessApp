@@ -8,7 +8,7 @@ class ServerFailure extends Failure {
   ServerFailure([super.message = 'Ocorreu um erro no servidor']);
 }
 
-// Conextion error
+// Connection error
 class NetworkFailure extends Failure {
   NetworkFailure([super.message = 'Verifique a conexão à internet']);
 }
