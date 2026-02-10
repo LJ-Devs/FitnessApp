@@ -5,7 +5,7 @@ import '../features/home/presentation/pages/home_page.dart';
 import '../features/profile/presentation/pages/edit_profile_page.dart';
 
 class AppRoutes {
-  // Constant do avoid errors
+  // Constant to avoid errors
   static const String login = '/login';
   static const String register = '/register';
   static const String home = '/home';
