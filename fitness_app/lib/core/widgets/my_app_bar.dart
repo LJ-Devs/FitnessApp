@@ -16,6 +16,8 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       elevation: 0,
+      scrolledUnderElevation: 0,
+      surfaceTintColor: Colors.transparent,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       centerTitle: false,
       leading: showBackButton 
@@ -25,7 +27,12 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           )
         : null,
       titleSpacing: showBackButton ? 0 : 24,
-      title: title,
+      title: title != null 
+      ? DefaultTextStyle.merge(
+          style: const TextStyle(fontWeight: FontWeight.bold),
+          child: title!,
+        ) 
+      : null,
       actions: actions,
     );
   }

@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 
 class MyActionCard extends StatelessWidget {
   final String title;
-  final IconData icon;
+  final IconData? icon;
+  final String? imageAsset;
   final Color color;
   final VoidCallback onTap;
 
   const MyActionCard({
     super.key,
     required this.title,
-    required this.icon,
+    this.icon,
+    this.imageAsset,
     required this.color,
     required this.onTap,
-  });
+  }) : assert(icon != null || imageAsset != null, 'Imagem ou Icone obrigatório');
 
   @override
   Widget build(BuildContext context) {
@@ -52,12 +54,14 @@ class MyActionCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                height: 50,
+                width: 50,
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, color: color, size: 28),
+                child: _buildIconOrImage(),
               ),
               Text(
                 title,
@@ -73,5 +77,25 @@ class MyActionCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildIconOrImage() {
+    if (imageAsset != null) {
+      return Image.asset(
+        imageAsset!,
+        fit: BoxFit.contain,
+        //color : color,
+      );
+    }
+    else if (icon != null) {
+      return Icon(
+        icon!,
+        color: color,
+        size: 24,
+      );
+    }
+    else {
+      return const SizedBox();
+    }
   }
 }
