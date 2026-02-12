@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../../../core/widgets/my_search_bar.dart';
 import '../../../../injection_container.dart';
 import '../../../../core/theme/tenant.dart';
 import '../widgets/chat_tile.dart';
 import '../view_models/chat_list_view_model.dart';
-import '../../../../core/widgets/my_text_field.dart';
 import 'chat_detail_page.dart';
 
 class ChatPage extends StatelessWidget {
@@ -41,15 +41,13 @@ class ChatPage extends StatelessWidget {
             const SizedBox(height: 24),
 
             // Search Bar TODO
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Consumer<ChatListViewModel>(builder: (context, viewModel, _) {
-                  return MyTextField(
-                    controller: viewModel.searchController, label: "Procurar conversa...",
-                    prefixIcon: Icons.search,
-                  );
-                },
-              )
+            Consumer<ChatListViewModel>(
+              builder: (context, viewModel, _) {
+                return MySearchBar(
+                  controller: viewModel.searchController,
+                  hintText: "Procurar conversa...",
+                );
+              },
             ),
 
             const SizedBox(height: 24),
