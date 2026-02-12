@@ -9,6 +9,11 @@ class Validators {
     r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[\W_]).{8,}$',
   );
 
+  // URL simple regex
+  static final RegExp _urlRegExp = RegExp(
+    r'^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$',
+  );
+
   // Email Validator
   static String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
@@ -30,6 +35,17 @@ class Validators {
     }
     if (!_passwordRegExp.hasMatch(value)) {
       return 'Mínimo: 1 maiúscula, 1 minúscula, 1 número e 1 símbolo';
+    }
+    return null;
+  }
+
+  static String? validateUrl(String? value) {
+    // Se for opcional e estiver vazio, retorna válido (null)
+    if (value == null || value.isEmpty) {
+      return null; 
+    }
+    if (!_urlRegExp.hasMatch(value)) {
+      return 'Insere um link válido (Ex: https://website.com/...)';
     }
     return null;
   }

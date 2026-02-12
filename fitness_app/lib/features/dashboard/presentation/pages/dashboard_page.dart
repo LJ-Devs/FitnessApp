@@ -6,6 +6,8 @@ import '../../../../core/widgets/my_action_card.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/theme/tenant.dart'; 
 
+import '../../../exercises/presentation/pages/muscle_group_grid_page.dart';
+
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 
@@ -80,11 +82,15 @@ class _DashboardView extends StatelessWidget {
                   const SizedBox(width: 16),
                   Expanded(
                     child: MyActionCard(
-                      title: "O meu\nplano",
+                      title: "Biblioteca\nExercícios",
                       icon: Icons.fitness_center_rounded,
                       color: Colors.orangeAccent, 
-                      onTap: () {
-                        debugPrint("Clicou em Meus Treinos"); //////// TODO
+                      onTap: () {Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MuscleGroupGridPage(),
+                          ),
+                      );
                       },
                     ),
                   ),
