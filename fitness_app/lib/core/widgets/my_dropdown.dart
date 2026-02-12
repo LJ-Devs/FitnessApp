@@ -35,7 +35,7 @@ class MyDropdown<T> extends StatelessWidget {
       isDense: true,
       menuMaxHeight: 350,
       
-      // Menu com cantos arredondados
+      // Menu with rounded corners
       borderRadius: BorderRadius.circular(16),
       dropdownColor: theme.cardColor, 
       elevation: 4, 
@@ -46,13 +46,13 @@ class MyDropdown<T> extends StatelessWidget {
         size: 24,
       ),
 
-      // Estilo do texto selecionado
+      // Text style -> selected
       style: theme.textTheme.bodyMedium?.copyWith(
         color: colorScheme.onSurfaceVariant,
         fontWeight: FontWeight.w500,
       ),
       
-      // === DECORAÇÃO DA CAIXA (Igual ao MyTextField) ===
+      // === Box decoration (MyTextField) ===
       decoration: InputDecoration(
         labelText: label,
         labelStyle: theme.textTheme.bodyMedium?.copyWith(
@@ -62,10 +62,9 @@ class MyDropdown<T> extends StatelessWidget {
         prefixIcon: Icon(prefixIcon, color: colorScheme.onSurfaceVariant),
         
         filled: true,
-        // Usamos withOpacity para segurança (evita crashes em versões antigas/novas)
-        fillColor: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+        fillColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
         
-        // Bordas
+        // Borders
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -74,12 +73,12 @@ class MyDropdown<T> extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
         ),
-        // Foco com a cor primária
+
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: colorScheme.primary, width: 1.5),
         ),
-        // Erro
+        // Error
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: colorScheme.error, width: 1.5),
