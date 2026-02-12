@@ -5,6 +5,7 @@ import '../../../../core/theme/tenant.dart';
 import '../../../../injection_container.dart';
 import '../view_models/login_view_model.dart';
 import '../../../../core/widgets/my_text_field.dart';
+import '../../../../core/widgets/my_main_button.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -136,42 +137,28 @@ class _LoginFormState extends State<_LoginForm> {
                   // ==============================
           
                   // Login Button
-                  SizedBox(
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: viewModel.isLoading
-                      ? null
-                      : () async {
-                          // Close the keyboard
-                          FocusScope.of(context).unfocus();
-                          
-                          final success = await viewModel.login();
-                          
-                          // Verify status
-                          if (context.mounted) {
-                            if (!success && viewModel.errorMessage != null) {
-                              // If failed show error message
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(viewModel.errorMessage!),
-                                  backgroundColor: theme.colorScheme.error,
-                                ),
-                              );
-                            }
-                          }
-                        },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: theme.colorScheme.primary,
-                      ),
-                      child: viewModel.isLoading
-                          ? const SizedBox(
-                              height: 24,
-                              width: 24,
-                              child: CircularProgressIndicator(
-                                  color: Colors.white, strokeWidth: 2),
-                            )
-                          : const Text("Iniciar sessão"),
-                    ),
+                  MyMainButton(
+                    text: "Iniciar sessão",
+                    isLoading: viewModel.isLoading,
+                    onPressed: () async {
+                      // Close the keyboard
+                      FocusScope.of(context).unfocus();
+                      
+                      final success = await viewModel.login();
+                      
+                      // Verify status
+                      if (context.mounted) {
+                        if (!success && viewModel.errorMessage != null) {
+                          // If failed show error message
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(viewModel.errorMessage!),
+                              backgroundColor: theme.colorScheme.error,
+                            ),
+                          );
+                        }
+                      }
+                    },
                   ),
           
                   const SizedBox(height: 24),

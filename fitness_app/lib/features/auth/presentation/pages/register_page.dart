@@ -4,6 +4,7 @@ import '../../../../core/theme/tenant.dart';
 import '../../../../injection_container.dart';
 import '../view_models/register_view_model.dart';
 import '../../../../core/widgets/my_text_field.dart';
+import 'package:fitness_app/core/widgets/my_main_button.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
@@ -120,42 +121,28 @@ class _RegisterFormState extends State<_RegisterForm> {
                   // ACTION BUTTONS
                   // ==============================
           
-                  SizedBox(
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: viewModel.isLoading
-                          ? null
-                          : () async {
-                              FocusScope.of(context).unfocus();
+                  MyMainButton(
+                    text: "Criar conta",
+                    isLoading: viewModel.isLoading,
+                    onPressed: () async {
+                      FocusScope.of(context).unfocus();
 
-                              final success = await viewModel.register();
-                              
-                              if (context.mounted) {
-                                if (success) {
-                                  Navigator.of(context).popUntil((route) => route.isFirst);
-                                } else if (viewModel.errorMessage != null) {
-                                  // If failed show error message
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(viewModel.errorMessage!),
-                                      backgroundColor: theme.colorScheme.error,
-                                    ),
-                                  );
-                                }
-                              }
-                            },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: theme.colorScheme.primary,
-                      ),
-                      child: viewModel.isLoading
-                          ? const SizedBox(
-                              height: 24,
-                              width: 24,
-                              child: CircularProgressIndicator(
-                                  color: Colors.white, strokeWidth: 2),
-                            )
-                          : const Text("Criar conta"),
-                    ),
+                      final success = await viewModel.register();
+                      
+                      if (context.mounted) {
+                        if (success) {
+                          Navigator.of(context).popUntil((route) => route.isFirst);
+                        } else if (viewModel.errorMessage != null) {
+                          // If failed show error message
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(viewModel.errorMessage!),
+                              backgroundColor: theme.colorScheme.error,
+                            ),
+                          );
+                        }
+                      }
+                    },
                   ),
           
                   const SizedBox(height: 24),

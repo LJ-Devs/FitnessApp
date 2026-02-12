@@ -6,6 +6,7 @@ import '../view_models/edit_profile_view_model.dart';
 import '../widgets/profile_avatar_selector.dart';
 import '../../../../core/widgets/my_app_bar.dart'; 
 import '../../../../core/widgets/my_text_field.dart';
+import 'package:fitness_app/core/widgets/my_main_button.dart';
 
 class EditProfilePage extends StatelessWidget {
   const EditProfilePage({super.key});
@@ -71,50 +72,36 @@ class _EditProfileForm extends StatelessWidget {
               const SizedBox(height: 48),
 
               // Save button
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: viewModel.isLoading
-                      ? null
-                      : () async {
-                          FocusScope.of(context).unfocus();
-                          
-                          // Call logic to save
-                          final success = await viewModel.saveChanges();
+              MyMainButton(
+                text: "Guardar",
+                isLoading: viewModel.isLoading,
+                onPressed: () async {
+                  FocusScope.of(context).unfocus();
+                  
+                  // Call logic to save
+                  final success = await viewModel.saveChanges();
 
-                          // Verify if widget is still mounted
-                          if (context.mounted) {
-                            if (success) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("Dados atualizados com sucesso!"),
-                                  behavior: SnackBarBehavior.floating,
-                                ),
-                              );
-                              Navigator.pop(context); // Back to previous screen
+                  // Verify if widget is still mounted
+                  if (context.mounted) {
+                    if (success) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Dados atualizados com sucesso!"),
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                      Navigator.pop(context); // Back to previous screen
 
-                            } else if (viewModel.errorMessage != null) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(viewModel.errorMessage!),
-                                  backgroundColor: theme.colorScheme.error,
-                                ),
-                              );
-                            }
-                          }
-                        },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: theme.colorScheme.primary,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: viewModel.isLoading
-                      ? const SizedBox(
-                          height: 24, width: 24, 
-                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)
-                        )
-                      : const Text("Guardar Alterações"),
-                ),
+                    } else if (viewModel.errorMessage != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(viewModel.errorMessage!),
+                          backgroundColor: theme.colorScheme.error,
+                        ),
+                      );
+                    }
+                  }
+                },
               ),
             ],
           ),
